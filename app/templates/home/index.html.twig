@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Strona główna - Mój Blog{% endblock %}
+
+{% block body %}
+<header class="masthead">
+    <div class="container py-5 text-center">
+        <h1 class="mb-4">Kategorie</h1>
+        <div class="d-flex flex-wrap justify-content-center gap-2">
+            {% for category in categories %}
+                <a href="{{ path('category_filter', { 'id': category.id }) }}" class="btn btn-outline-primary btn-sm">
+                    {{ category.name }}
+                </a>
+            {% else %}
+                <p>Brak kategorii.</p>
+            {% endfor %}
+        </div>
+    </div>
+</header>
+
+{% if selectedCategory is defined %}
+    <h2 class="text-center">Posty w kategorii: {{ selectedCategory.name }}</h2>
+{% endif %}
+
+<div class="row">
+    <div class="col-lg-8 col-md-10 mx-auto">
+        {% for post in posts %}
+            <div class="post-preview">
+                <a href="{{ path('post_show', { 'id': post.id }) }}">
+                    <h2 class="post-title">{{ post.title }}</h2>
+                    <h3 class="post-subtitle">{{ post.content|slice(0, 150) ~ '...' }}</h3>
+                </a>
+                <p class="post-meta">
+                    Opublikowano przez {{ post.author.nickname ?? post.author.email }} dnia {{ post.createdAt|date('d-m-Y H:i') }}
+                </p>
+                <a href="{{ path('category_filter', { 'id': post.category.id }) }}" class="btn btn-outline-primary btn-sm">
+                    {{ post.category.name }}
+                </a>
+            </div>
+            <hr>
+        {% else %}
+            <p>Brak postów do wyświetlenia.</p>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="pagination justify-content-center">
+    {{ knp_pagination_render(posts) }}
+</div>
+{% endblock %}

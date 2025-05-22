@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ post.title }} - Mój Blog{% endblock %}
+
+{% block body %}
+  <article class="post">
+    <header style="padding-top: 100px; ">
+      <h1 style="z-index: 1; font-size: 70px;">{{ post.title }}</h1>
+      <p class="text-muted">
+        Opublikowano przez {{ post.author.nickname ?? post.author.email }} dnia {{ post.createdAt|date('d-m-Y H:i') }}
+        {% if post.category %}
+          | Kategoria: {{ post.category.name }}
+        {% endif %}
+      </p>
+    </header>
+
+    <section class="post-content">
+      {{ post.content|raw }}
+    </section>
+  </article>
+{% endblock %}
