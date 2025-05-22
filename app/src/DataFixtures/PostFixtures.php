@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Post fixtures.
+ */
+
 namespace App\DataFixtures;
 
 use App\Entity\Post;
@@ -10,8 +14,18 @@ use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Faker\Factory;
 use App\Entity\Category;
 
+/**
+ * Class PostFixtures.
+ *
+ * This class is responsible for loading the initial data into the database.
+ */
 class PostFixtures extends Fixture implements DependentFixtureInterface
 {
+    /**
+     * Load the fixtures.
+     *
+     * @param ObjectManager $manager The object manager
+     */
     public function load(ObjectManager $manager): void
     {
         $faker = Factory::create();
@@ -37,6 +51,11 @@ class PostFixtures extends Fixture implements DependentFixtureInterface
         $manager->flush();
     }
 
+    /**
+     * Get the dependencies.
+     *
+     * @return array The dependencies
+     */
     public function getDependencies(): array
     {
         return [

@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Post repository.
+ */
+
 namespace App\Repository;
 
 use App\Entity\Post;
@@ -8,23 +12,38 @@ use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Post>
+ * PostRepository class.
  */
 class PostRepository extends ServiceEntityRepository
 {
-
+    /**
+     * PostRepository constructor.
+     *
+     * @param ManagerRegistry $registry The registry
+     */
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Post::class);
     }
 
+    /**
+     * Query all posts.
+     *
+     * @return QueryBuilder The query builder
+     */
     public function queryAll(): QueryBuilder
     {
         return $this->createQueryBuilder('post')
             ->orderBy('post.createdAt', 'DESC');
     }
 
-    
+    /**
+     * Query posts by category.
+     *
+     * @param int $categoryId The category ID
+     *
+     * @return QueryBuilder The query builder
+     */
     public function queryByCategory(int $categoryId): QueryBuilder
     {
         return $this->createQueryBuilder('post')
@@ -33,7 +52,7 @@ class PostRepository extends ServiceEntityRepository
             ->orderBy('post.createdAt', 'DESC');
     }
 
-    
+
 
 
     //    /**

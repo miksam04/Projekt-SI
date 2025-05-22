@@ -1,23 +1,36 @@
 <?php
+
+/**
+ * Category controller.
+ */
+
 namespace App\Controller;
 
 use App\Interface\CategoryServiceInterface;
-use App\Service\CategoryService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * Controller responsible for managing categories.
+ */
 class CategoryController extends AbstractController
 {
-    private CategoryServiceInterface $categoryService;
-
-    public function __construct(CategoryServiceInterface $categoryService)
+    /**
+     * Constructor.
+     *
+     * @param CategoryServiceInterface $categoryService the category service
+     */
+    public function __construct(private readonly CategoryServiceInterface $categoryService)
     {
-        $this->categoryService = $categoryService;
     }
 
-    #[Route('/categories', name: 'category_index')]
-    public function index(CategoryServiceInterface $categoryService): Response
+    /**
+     * Displays the list of categories.
+     *
+     * @return Response the response object
+     */
+    #[\Symfony\Component\Routing\Attribute\Route('/categories', name: 'category_index')]
+    public function index(): Response
     {
         $categories = $categoryService->getAllCategories();
 

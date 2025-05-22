@@ -1,11 +1,20 @@
 <?php
 
+/**
+ * Post entity.
+ */
+
 namespace App\Entity;
 
 use App\Repository\PostRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * Class Post.
+ *
+ * Represents a post entity.
+ */
 #[ORM\Entity(repositoryClass: PostRepository::class)]
 #[ORM\Table(name: 'posts')]
 class Post
@@ -35,21 +44,43 @@ class Post
     #[ORM\JoinColumn(nullable: true)]
     private ?Category $category = null;
 
+    /**
+     * Post constructor.
+     *
+     * Initializes the createdAt property with the current date and time.
+     */
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
     }
 
+    /**
+     * Gets the ID of the post.
+     *
+     * @return int|null the ID of the post
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * Gets the title of the post.
+     *
+     * @return string|null the title of the post
+     */
     public function getTitle(): ?string
     {
         return $this->title;
     }
 
+    /**
+     * Sets the title of the post.
+     *
+     * @param string $title the title of the post
+     *
+     * @return static the current instance for method chaining
+     */
     public function setTitle(string $title): static
     {
         $this->title = $title;
@@ -57,11 +88,23 @@ class Post
         return $this;
     }
 
+    /**
+     * Gets the content of the post.
+     *
+     * @return string|null the content of the post
+     */
     public function getContent(): ?string
     {
         return $this->content;
     }
 
+    /**
+     * Sets the content of the post.
+     *
+     * @param string $content the content of the post
+     *
+     * @return static the current instance for method chaining
+     */
     public function setContent(string $content): static
     {
         $this->content = $content;
@@ -69,11 +112,23 @@ class Post
         return $this;
     }
 
+    /**
+     * Gets the creation date and time of the post.
+     *
+     * @return \DateTimeImmutable|null the creation date and time of the post
+     */
     public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;
     }
 
+    /**
+     * Sets the creation date and time of the post.
+     *
+     * @param \DateTimeImmutable $createdAt the creation date and time of the post
+     *
+     * @return static the current instance for method chaining
+     */
     public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
@@ -81,11 +136,23 @@ class Post
         return $this;
     }
 
+    /**
+     * Gets the last updated date and time of the post.
+     *
+     * @return \DateTime|null the last updated date and time of the post
+     */
     public function getUpdatedAt(): ?\DateTime
     {
         return $this->updatedAt;
     }
 
+    /**
+     * Sets the last updated date and time of the post.
+     *
+     * @param \DateTime|null $updatedAt the last updated date and time of the post
+     *
+     * @return static the current instance for method chaining
+     */
     public function setUpdatedAt(?\DateTime $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
@@ -93,11 +160,23 @@ class Post
         return $this;
     }
 
+    /**
+     * Gets the author of the post.
+     *
+     * @return User|null the author of the post
+     */
     public function getAuthor(): ?User
     {
         return $this->author;
     }
 
+    /**
+     * Sets the author of the post.
+     *
+     * @param User|null $author the author of the post
+     *
+     * @return static the current instance for method chaining
+     */
     public function setAuthor(?User $author): static
     {
         $this->author = $author;
@@ -105,11 +184,23 @@ class Post
         return $this;
     }
 
+    /**
+     * Gets the category of the post.
+     *
+     * @return Category|null the category of the post
+     */
     public function getCategory(): ?Category
     {
         return $this->category;
     }
 
+    /**
+     * Sets the category of the post.
+     *
+     * @param Category|null $category the category of the post
+     *
+     * @return static the current instance for method chaining
+     */
     public function setCategory(?Category $category): static
     {
         $this->category = $category;
