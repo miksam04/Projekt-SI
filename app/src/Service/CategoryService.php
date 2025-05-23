@@ -9,6 +9,8 @@ namespace App\Service;
 use App\Interface\CategoryServiceInterface;
 use App\Repository\CategoryRepository;
 use App\Entity\Category;
+use Knp\Component\Pager\PaginatorInterface;
+use Knp\Component\Pager\Pagination\PaginationInterface;
 
 /**
  * Service responsible for managing categories.
@@ -19,13 +21,34 @@ use App\Entity\Category;
  */
 class CategoryService implements CategoryServiceInterface
 {
+    public $categoryRepository;
+    public $paginator;
+    private const ITEMS_PER_PAGE = 10;
+
     /**
      * CategoryService constructor.
      *
      * @param CategoryRepository $categoryRepository The category repository
+     * @param PaginatorInterface $paginator          The paginator service
      */
-    public function __construct(private readonly CategoryRepository $categoryRepository)
+    public function __construct(CategoryRepository $categoryRepository, PaginatorInterface $paginator)
     {
+        $this->categoryRepository = $categoryRepository;
+        $this->paginator = $paginator;
+    }
+
+    /**
+     * Get all categories.
+     *
+     * @param int $page The page number
+     *
+     * @return array An array of Category objects
+     */
+    public function getPaginatedCategories(int $page): PaginationInterface
+    {
+        $query = $this->categoryRepository->queryAll();
+
+        return $this->paginator->paginate($query, $page, self::ITEMS_PER_PAGE);
     }
 
     /**
@@ -48,5 +71,15 @@ class CategoryService implements CategoryServiceInterface
     public function getCategoryById(int $id): ?Category
     {
         return $this->categoryRepository->find($id);
+    }
+
+    /**
+     * Save a category.
+     *
+     * @param Category $category The category to save
+     */
+    public function save(Category $category): void
+    {
+        $this->categoryRepository->save($category);
     }
 }

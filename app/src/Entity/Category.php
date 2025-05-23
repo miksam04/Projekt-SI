@@ -8,6 +8,8 @@ namespace App\Entity;
 
 use App\Repository\CategoryRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Class Category.
@@ -16,6 +18,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
 #[ORM\Table(name: 'categories')]
+#[ORM\UniqueConstraint(name: 'category_name_unique', columns: ['name'])]
+#[UniqueEntity(fields: ['name'])]
 class Category implements \Stringable
 {
     #[ORM\Id]
@@ -23,9 +27,13 @@ class Category implements \Stringable
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Assert\Type('string')]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 3, max: 64)]
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
+    #[Assert\Type('string')]
     #[ORM\Column(length: 255)]
     private ?string $slug = null;
 

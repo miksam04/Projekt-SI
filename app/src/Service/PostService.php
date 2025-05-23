@@ -8,7 +8,6 @@ namespace App\Service;
 
 use App\Interface\PostServiceInterface;
 use App\Repository\PostRepository;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Knp\Component\Pager\PaginatorInterface;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use App\Entity\Post;
@@ -21,7 +20,6 @@ use App\Entity\Post;
  */
 class PostService implements PostServiceInterface
 {
-    private readonly RequestStack $requestStack;
     private const ITEMS_PER_PAGE = 10;
 
     /**
