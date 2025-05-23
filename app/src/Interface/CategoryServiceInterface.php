@@ -44,4 +44,11 @@ interface CategoryServiceInterface
      * @param Category $category the category to save
      */
     public function save(Category $category): void;
+
+    /**
+     * Delete a category.
+     *
+     * @param Category $category the category to delete
+     */
+    public function delete(Category $category): void;
 }

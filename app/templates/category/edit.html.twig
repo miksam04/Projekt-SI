@@ -1,21 +1,22 @@
 {% extends 'category/index.html.twig' %}
 
-{% block title %}Dodaj kategorię - Mój Blog{% endblock %}
+{% block title %}Edytuj kategorię - Mój Blog{% endblock %}
 
 {% block content %}
 <div class="card mb-5">
     <div class="card-header">
-        <h2>Dodaj nową kategorię</h2>
+        <h2>Edytuj kategorię</h2>
     </div>
     <div class="card-body">
         {{ form_start(form) }}
         
             {{ form_row(form.name, {'label': 'Nazwa kategorii'}) }}
-            <button type="submit" class="btn btn-success">Dodaj</button>
+            <button type="submit" class="btn btn-success">Zapisz zmiany</button>
         {{ form_end(form) }}
     </div>
 </div>
 
+<!-- Współdzielona tabela -->
 {% block table %}
     {{ parent() }}
 {% endblock %}

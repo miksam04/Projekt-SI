@@ -85,4 +85,83 @@ class CategoryController extends AbstractController
             'categories' => $pagination,
         ]);
     }
+
+    /**
+     * Displays the form to edit an existing category.
+     *
+     * @param Request  $request  The request object
+     * @param Category $category The category entity
+     * @param int      $page     The page number
+     *
+     * @return Response the response object
+     */
+    #[\Symfony\Component\Routing\Attribute\Route('/categories/{id}/edit', name: 'category_edit', methods : 'GET|PUT')]
+    public function edit(Request $request, Category $category, #[MapQueryParameter] int $page = 1): Response
+    {
+        $form = $this->createForm(
+            CategoryType::class,
+            $category,
+            [
+                'method' => 'PUT',
+                'action' => $this->generateUrl('category_edit', ['id' => $category->getId()]),
+            ]
+        );
+        $form->handleRequest($request);
+
+        $pagination = $this->categoryService->getPaginatedCategories($page);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->categoryService->save($category);
+
+            $this->addFlash(
+                'success',
+                $this->translator->trans('Category updated successfully')
+            );
+
+            return $this->redirectToRoute('category_index');
+        }
+
+        return $this->render('category/edit.html.twig', [
+            'form' => $form->createView(),
+            'categories' => $pagination,
+        ]);
+    }
+
+    /**
+     * Displays the form to delete an existing category.
+     *
+     * @param Request  $request  The request object
+     * @param Category $category The category entity
+     * @param int      $page     The page number
+     *
+     * @return Response the response object
+     */
+    #[\Symfony\Component\Routing\Attribute\Route('/categories/{id}/delete', name: 'category_delete', methods : 'GET|DELETE')]
+    public function delete(Request $request, Category $category, #[MapQueryParameter] int $page = 1): Response
+    {
+        $form = $this->createForm(CategoryType::class, $category, [
+            'method' => 'DELETE',
+            'action' => $this->generateUrl('category_delete', ['id' => $category->getId()]),
+        ]);
+        $form->handleRequest($request);
+
+        $pagination = $this->categoryService->getPaginatedCategories($page);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->categoryService->delete($category);
+
+            $this->addFlash(
+                'success',
+                $this->translator->trans('Category deleted successfully')
+            );
+
+            return $this->redirectToRoute('category_index');
+        }
+
+        return $this->render('category/delete.html.twig', [
+            'form' => $form->createView(),
+            'category' => $category,
+            'categories' => $pagination,
+        ]);
+    }
 }

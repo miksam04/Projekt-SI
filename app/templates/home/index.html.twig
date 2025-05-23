@@ -5,7 +5,8 @@
 {% block body %}
 <header class="masthead">
     <div class="container py-5 text-center">
-        <h1 class="mb-4">Kategorie</h1>
+        <h1 class="mb-4">
+        <a href = "{{ path('category_index',) }}">Kategorie</h1>
         <div class="d-flex flex-wrap justify-content-center gap-2">
             {% for category in categories %}
                 <a href="{{ path('category_filter', { 'id': category.id }) }}" class="btn btn-outline-primary btn-sm">
