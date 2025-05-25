@@ -21,7 +21,7 @@ interface CategoryServiceInterface
      *
      * @return PaginationInterface a pagination object containing Category objects
      */
-    public function getPaginatedCategories(int $page) : PaginationInterface;
+    public function getPaginatedCategories(int $page): PaginationInterface;
 
     /**
      * Return all categories.

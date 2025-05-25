@@ -139,10 +139,12 @@ class CategoryController extends AbstractController
     #[\Symfony\Component\Routing\Attribute\Route('/categories/{id}/delete', name: 'category_delete', methods : 'GET|DELETE')]
     public function delete(Request $request, Category $category, #[MapQueryParameter] int $page = 1): Response
     {
-        $form = $this->createForm(CategoryType::class, $category, [
+        $formBuilder = $this->createFormBuilder(null, [
             'method' => 'DELETE',
             'action' => $this->generateUrl('category_delete', ['id' => $category->getId()]),
         ]);
+        $form = $formBuilder->getForm();
+
         $form->handleRequest($request);
 
         $pagination = $this->categoryService->getPaginatedCategories($page);

@@ -12,7 +12,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use App\Interface\PostServiceInterface;
 use App\Interface\CategoryServiceInterface;
+use App\Service\CommentService;
 use App\Entity\Post;
+use App\Entity\Comment;
+use App\Form\Type\CommentType;
 use App\Form\Type\PostType;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -21,6 +24,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class PostController extends AbstractController
 {
+    public $commentService;
     public $postService;
     public $categoryService;
     public $translator;
@@ -31,11 +35,13 @@ class PostController extends AbstractController
      * @param PostServiceInterface     $postService     the post service
      * @param CategoryServiceInterface $categoryService the category service
      * @param TranslatorInterface      $translator      the translator service
+     * @param CommentService           $commentService  the comment service
      */
-    public function __construct(PostServiceInterface $postService, CategoryServiceInterface $categoryService, TranslatorInterface $translator)
+    public function __construct(PostServiceInterface $postService, CategoryServiceInterface $categoryService, TranslatorInterface $translator, CommentService $commentService)
     {
         $this->postService = $postService;
         $this->categoryService = $categoryService;
+        $this->commentService = $commentService;
         $this->translator = $translator;
     }
 
@@ -68,9 +74,16 @@ class PostController extends AbstractController
     public function showPost(int $id): Response
     {
         $post = $this->postService->getPostById($id);
+        $comments = $this->commentService->getCommentsByPost($post);
+
+        $comment = new Comment();
+        $comment->setPost($post);
+        $form = $this->createForm(CommentType::class, $comment);
 
         return $this->render('post/show.html.twig', [
             'post' => $post,
+            'comments' => $comments,
+            'comment_form' => $form->createView(),
         ]);
     }
 
