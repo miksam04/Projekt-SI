@@ -42,7 +42,7 @@ class CategoryService implements CategoryServiceInterface
      *
      * @param int $page The page number
      *
-     * @return array An array of Category objects
+     * @return PaginationInterface A pagination object containing Category objects
      */
     public function getPaginatedCategories(int $page): PaginationInterface
     {

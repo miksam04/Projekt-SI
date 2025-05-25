@@ -52,6 +52,32 @@ class PostRepository extends ServiceEntityRepository
             ->orderBy('post.createdAt', 'DESC');
     }
 
+    /**
+     * Save a post.
+     *
+     * @param Post $post The post to save
+     *
+     * @return void returns nothing
+     */
+    public function savePost(Post $post): void
+    {
+        $this->getEntityManager()->persist($post);
+        $this->getEntityManager()->flush();
+    }
+
+    /**
+     * Delete a post.
+     *
+     * @param Post $post The post to delete
+     *
+     * @return void returns nothing
+     */
+    public function deletePost(Post $post): void
+    {
+        $this->getEntityManager()->remove($post);
+        $this->getEntityManager()->flush();
+    }
+
 
 
 

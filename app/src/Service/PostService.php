@@ -8,9 +8,11 @@ namespace App\Service;
 
 use App\Interface\PostServiceInterface;
 use App\Repository\PostRepository;
+use App\Repository\UserRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use App\Entity\Post;
+use App\Entity\User;
 
 /**
  * Service responsible for managing blog posts.
@@ -27,8 +29,9 @@ class PostService implements PostServiceInterface
      *
      * @param PostRepository     $postRepository The post repository
      * @param PaginatorInterface $paginator      The paginator service
+     * @param UserRepository     $userRepository The user repository
      */
-    public function __construct(private readonly PostRepository $postRepository, private readonly PaginatorInterface $paginator)
+    public function __construct(private readonly PostRepository $postRepository, private readonly PaginatorInterface $paginator, private readonly UserRepository $userRepository)
     {
     }
 
@@ -71,5 +74,33 @@ class PostService implements PostServiceInterface
         $query = $this->postRepository->queryByCategory($categoryId);
 
         return $this->paginator->paginate($query, $page, self::ITEMS_PER_PAGE);
+    }
+
+    /**
+     * Save a post.
+     *
+     * @param Post $post The post to save
+     *
+     * @return void returns nothing
+     */
+    public function savePost(Post $post): void
+    {
+        $author = $this->userRepository->findOneBy(['nickname' => 'Admin']);
+
+        $post->setUpdatedAt(new \DateTimeImmutable());
+        $post->setAuthor($author);
+        $this->postRepository->savePost($post);
+    }
+
+    /**
+     * Delete a post.
+     *
+     * @param Post $post The post to delete
+     *
+     * @return void returns nothing
+     */
+    public function deletePost(Post $post): void
+    {
+        $this->postRepository->deletePost($post);
     }
 }

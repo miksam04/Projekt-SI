@@ -19,29 +19,45 @@
     </div>
 </header>
 
+{# Obsługa wiadomości flash #}
+{% for label, messages in app.flashes %}
+    <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
+        {% for message in messages %}
+            {{ message }}
+        {% endfor %}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+{% endfor %}
+
 {% if selectedCategory is defined %}
     <h2 class="text-center">Posty w kategorii: {{ selectedCategory.name }}</h2>
 {% endif %}
 
 <div class="row">
     <div class="col-lg-8 col-md-10 mx-auto">
-        {% for post in posts %}
-            <div class="post-preview">
-                <a href="{{ path('post_show', { 'id': post.id }) }}">
-                    <h2 class="post-title">{{ post.title }}</h2>
-                    <h3 class="post-subtitle">{{ post.content|slice(0, 150) ~ '...' }}</h3>
-                </a>
-                <p class="post-meta">
-                    Opublikowano przez {{ post.author.nickname ?? post.author.email }} dnia {{ post.createdAt|date('d-m-Y H:i') }}
-                </p>
-                <a href="{{ path('category_filter', { 'id': post.category.id }) }}" class="btn btn-outline-primary btn-sm">
-                    {{ post.category.name }}
-                </a>
+{% for post in posts %}
+    <div class="post-preview">
+        <a href="{{ path('post_show', { 'id': post.id }) }}">
+            <h2 class="post-title">{{ post.title }}</h2>
+            <h3 class="post-subtitle">{{ post.content|slice(0, 150) ~ '...' }}</h3>
+        </a>
+        <p class="post-meta">
+            Opublikowano przez {{ post.author.nickname}} dnia {{ post.createdAt|date('d-m-Y H:i') }}
+        </p>
+        <div class="d-flex justify-content-between align-items-center">
+            <a href="{{ path('category_filter', { 'id': post.category.id }) }}" class="btn btn-outline-primary btn-sm">
+                {{ post.category.name }}
+            </a>
+            <div class="d-flex gap-2">
+                <a href="{{ path('post_edit', { 'id': post.id }) }}" class="btn btn-warning btn-sm">Edytuj</a>
+                <a href="{{ path('post_delete', { 'id': post.id, 'return_to': path('post_index')}) }}" class="btn btn-danger btn-sm" >Usuń</a>
             </div>
-            <hr>
-        {% else %}
-            <p>Brak postów do wyświetlenia.</p>
-        {% endfor %}
+        </div>
+    </div>
+    <hr>
+{% else %}
+    <p>Brak postów do wyświetlenia.</p>
+{% endfor %}
     </div>
 </div>
 

@@ -7,6 +7,7 @@
 namespace App\Interface;
 
 use App\Entity\Category;
+use Knp\Component\Pager\Pagination\PaginationInterface;
 
 /**
  * Interface CategoryServiceInterface.
@@ -18,9 +19,9 @@ interface CategoryServiceInterface
      *
      * @param int $page the page number
      *
-     * @return Category[]
+     * @return PaginationInterface a pagination object containing Category objects
      */
-    public function getPaginatedCategories(int $page);
+    public function getPaginatedCategories(int $page) : PaginationInterface;
 
     /**
      * Return all categories.

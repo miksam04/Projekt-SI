@@ -20,8 +20,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class CategoryController extends AbstractController
 {
-    public $translator;
     public $categoryService;
+    public $translator;
 
     /**
      * Constructor.

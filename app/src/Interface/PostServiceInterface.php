@@ -41,4 +41,18 @@ interface PostServiceInterface
      * @return PaginationInterface the paginated posts
      */
     public function getPostsByCategory(int $categoryId, int $page): PaginationInterface;
+
+    /**
+     * Save a post.
+     *
+     * @param Post $post the post object to save
+     */
+    public function savePost(Post $post): void;
+
+    /**
+     * Delete a post.
+     *
+     * @param Post $post the post object to delete
+     */
+    public function deletePost(Post $post): void;
 }
