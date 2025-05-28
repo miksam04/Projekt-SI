@@ -87,7 +87,7 @@ class PostService implements PostServiceInterface
     {
         $author = $this->userRepository->findOneBy(['nickname' => 'Admin']);
 
-        $post->setUpdatedAt(new \DateTimeImmutable());
+        
         $post->setAuthor($author);
         $this->postRepository->savePost($post);
     }

@@ -10,6 +10,7 @@ use App\Repository\CategoryRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Class Category.
@@ -30,11 +31,13 @@ class Category implements \Stringable
     #[Assert\Type('string')]
     #[Assert\NotBlank]
     #[Assert\Length(min: 3, max: 64)]
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 64)]
     private ?string $name = null;
 
     #[Assert\Type('string')]
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 64)]
+    #[Assert\Length(min: 3, max: 64)]
+    #[Gedmo\Slug(fields: ['name'])]
     private ?string $slug = null;
 
     /**

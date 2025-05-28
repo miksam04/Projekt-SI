@@ -9,6 +9,7 @@ namespace App\Entity;
 use App\Repository\CommentRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Represents a comment on a post.
@@ -27,17 +28,18 @@ class Comment
     private ?int $id = null;
 
     #[Assert\NotBlank]
-    #[Assert\Length(min: 3, max: 64)]
+    #[Assert\Length(min: 3, max: 255)]
+    #[Assert\Email]
     #[ORM\Column(length: 255)]
     private ?string $email = null;
 
     #[Assert\NotBlank]
     #[Assert\Length(min: 3, max: 64)]
-    #[ORM\Column(length: 20)]
+    #[ORM\Column(length: 64)]
     private ?string $nickname = null;
 
     #[Assert\NotBlank]
-    #[Assert\Length(min: 3, max: 64)]
+    #[Assert\Length(min: 2, max: 512)]
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
 

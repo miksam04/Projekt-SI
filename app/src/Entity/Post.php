@@ -9,6 +9,8 @@ namespace App\Entity;
 use App\Repository\PostRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Class Post.
@@ -24,16 +26,24 @@ class Post
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 3, max: 64)]
+    #[ORM\Column(length: 64)]
+    #[Assert\Type('string')]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 3, max: 65535)]
+    #[Assert\Type('string')]
     private ?string $content = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: 'datetime_immutable')]
+    #[Gedmo\Timestampable(on: 'create')]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(type: 'datetime_immutable')]
+    #[Gedmo\Timestampable(on: 'update')]
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\ManyToOne(targetEntity: User::class)]
@@ -41,18 +51,9 @@ class Post
     private ?User $author = null;
 
     #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: true)]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotNull]
     private ?Category $category = null;
-
-    /**
-     * Post constructor.
-     *
-     * Initializes the createdAt property with the current date and time.
-     */
-    public function __construct()
-    {
-        $this->createdAt = new \DateTimeImmutable();
-    }
 
     /**
      * Gets the ID of the post.
