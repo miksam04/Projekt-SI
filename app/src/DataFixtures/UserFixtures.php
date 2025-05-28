@@ -6,9 +6,10 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Enum\UserRole;
 use App\Entity\User;
-use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Faker\Generator;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 /**
@@ -16,7 +17,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
  *
  * This class is responsible for loading the initial data into the database.
  */
-class UserFixtures extends Fixture
+class UserFixtures extends AbstractBaseFixtures
 {
     /**
      * UserFixtures constructor.
@@ -29,21 +30,33 @@ class UserFixtures extends Fixture
 
     /**
      * Load the fixtures into the database.
-     *
-     * @param ObjectManager $manager The object manager
      */
-    public function load(ObjectManager $manager): void
+    protected function loadData(): void
     {
-        $admin = new User();
-        $admin->setEmail('admin@example.com');
-        $admin->setRoles(['ROLE_ADMIN']);
-        $hashedPassword = $this->passwordHasher->hashPassword($admin, 'twojeHaslo123');
-        $admin->setPassword($hashedPassword);
-        $admin->setNickname('Admin');
+        if (!$this->manager instanceof ObjectManager || !$this->faker instanceof Generator) {
+            return;
+        }
 
-        $this->addReference('admin', $admin);
+        $this->createMany(5, 'user', function (int $i) {
+            $user = new User();
+            $user->setEmail(sprintf('user%d@example.com', $i));
+            $user->setRoles([UserRole::ROLE_USER->value]);
+            $user->setNickname($this->faker->userName());
+            $user->setPassword($this->passwordHasher->hashPassword($user, 'user1234'));
 
-        $manager->persist($admin);
-        $manager->flush();
+
+            return $user;
+        });
+
+
+        $this->createMany(2, 'admin', function (int $i) {
+            $user = new User();
+            $user->setEmail(sprintf('admin%d@example.com', $i));
+            $user->setRoles([UserRole::ROLE_ADMIN->value, UserRole::ROLE_USER->value]);
+            $user->setNickname($this->faker->userName());
+            $user->setPassword($this->passwordHasher->hashPassword($user, 'admin1234'));
+
+            return $user;
+        });
     }
 }

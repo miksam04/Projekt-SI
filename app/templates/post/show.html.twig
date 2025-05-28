@@ -3,45 +3,53 @@
 {% block title %}{{ post.title }}{% endblock %}
 
 {% block body %}
+<div class="container" style="margin-top: 6rem;">
 
-    
-    <div class="container" style="margin-top: 6rem;">
-    
-        {# Wyświetlanie posta #}
-        <div class="row">
+    {# Flash messages #}
+    <div class="row">
         {% for label, messages in app.flashes %}
-    <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
-        {% for message in messages %}
-            {{ message }}
+            <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
         {% endfor %}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
-{% endfor %}
-            <div ">
-                <div class="card">
-                    <div class="card-header">
-                        <h1>{{ post.title }}</h1>
+
+    {# Post display #}
+    <div class="row">
+        <div>
+            <div class="card">
+                <div class="card-header">
+                    <h1>{{ post.title }}</h1>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">
+                        <small class="text-muted">
+                            Opublikowano: {{ post.createdAt|date('Y-m-d H:i') }} przez {{ post.author.email ?? 'Anonim' }}
+                        </small>
+                    </p>
+                    <hr>
+                    <div class="post-content">
+                        {{ post.content|raw }}
                     </div>
-                    <div class="card-body">
-                        <p class="card-text"><small class="text-muted">Opublikowano: {{ post.createdAt|date('Y-m-d H:i') }} przez {{ post.author.email ?? 'Anonim' }}</small></p>
-                        <hr>
-                        <div class="post-content">
-                            {{ post.content|raw }}
-                        </div>
-                    </div>
-                    <div class="card-footer text-muted d-flex justify-content-end">
-                        <a href="{{ path('post_index') }}" class="btn btn-outline-secondary btn-sm me-2">Powrót do listy</a>
-                      
-                        <a href="{{ path('post_edit', { 'id': post.id, 'returnTo': path('post_show', {'id': post.id}) }) }}" class="btn btn-outline-primary btn-sm me-2">Edytuj</a>
-                        <a href="{{ path('post_delete', {'id': post.id, 'returnTo': path('post_show', {'id': post.id})}) }}" class="btn btn-outline-danger btn-sm">Usuń</a>
-                    </div>
+                </div>
+                <div class="card-footer text-muted d-flex justify-content-end">
+                    <a href="{{ path('post_index') }}" class="btn btn-outline-secondary btn-sm me-2">Powrót do listy</a>
+                    {% if is_granted('POST_EDIT', post) %}
+                    <a href="{{ path('post_edit', { 'id': post.id, 'returnTo': path('post_show', {'id': post.id}) }) }}" class="btn btn-outline-primary btn-sm me-2">Edytuj</a>
+                    {% endif %}
+    
+                    {% if is_granted('POST_DELETE', post) %}
+                    <a href="{{ path('post_delete', {'id': post.id, 'returnTo': path('post_show', {'id': post.id})}) }}" class="btn btn-outline-danger btn-sm">Usuń</a>
+                    {% endif %}
                 </div>
             </div>
         </div>
     </div>
 
-
-        <h2 class="mt-5 mb-3">Komentarze</h2>
+    <h2 class="mt-5 mb-3">Komentarze</h2>
     <div class="mb-4">
         {% if comments|length > 0 %}
             <ul class="list-group">
@@ -51,14 +59,13 @@
                             <span>
                                 <strong>{{ comment.nickname|e }}</strong>
                                 <span class="text-muted small">({{ comment.email|e }})</span>
+                                {% if is_granted('COMMENT_DELETE', comment) %}
                                 <a href="{{ path('comment_delete', {'id': comment.id}) }}" class="btn btn-sm btn-outline-danger ms-2">Usuń</a>
+                                {% endif %}
                             </span>
-                            
                             <span class="text-muted small">{{ comment.createdAt|date('Y-m-d H:i') }}</span>
-                            
                         </div>
                         <div>{{ comment.content|e }}</div>
-
                     </li>
                 {% endfor %}
             </ul>
@@ -66,7 +73,7 @@
             <div class="alert alert-info mb-0">Brak komentarzy.</div>
         {% endif %}
     </div>
-
+    {% if is_granted('COMMENT_CREATE', comment) %}
     <h3 class="mb-3">Dodaj komentarz</h3>
     <div class="card mb-5">
         <div class="card-body">
@@ -84,4 +91,6 @@
             {{ form_end(comment_form) }}
         </div>
     </div>
+    {% endif %}
+</div>
 {% endblock %}

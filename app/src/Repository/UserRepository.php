@@ -25,6 +25,26 @@ class UserRepository extends ServiceEntityRepository
         parent::__construct($registry, User::class);
     }
 
+    public function saveUser(User $user, bool $flush = true): void
+    {
+        $this->GetEntityManager()->persist($user);
+        $this->GetEntityManager()->flush();
+    }
+
+    /**
+     * Find users with the 'ROLE_ADMIN' role.
+     *
+     * @return User[] Returns an array of User objects
+     */
+    public function getAdmins(): array
+    {
+        return $this->createQueryBuilder('u')
+            ->where('JSON_CONTAINS(u.roles, :role) = 1')
+            ->setParameter('role', json_encode('ROLE_ADMIN'))
+            ->getQuery()
+            ->getResult();
+    }
+
     //    /**
     //     * @return User[] Returns an array of User objects
     //     */

@@ -11,6 +11,8 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * Class Post.
@@ -54,6 +56,15 @@ class Post
     #[ORM\JoinColumn(nullable: false)]
     #[Assert\NotNull]
     private ?Category $category = null;
+
+    #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'post')]
+    #[ORM\JoinColumn(nullable: true)]
+    private Collection $comments;
+
+    public function __construct()
+    {
+        $this->comments = new ArrayCollection();
+    }
 
     /**
      * Gets the ID of the post.
@@ -207,5 +218,15 @@ class Post
         $this->category = $category;
 
         return $this;
+    }
+
+    /**
+     * Gets the comments associated with the post.
+     *
+     * @return Collection the collection of comments
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
     }
 }

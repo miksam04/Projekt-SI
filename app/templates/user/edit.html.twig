@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edycja profilu{% endblock %}
+
+{% block body %}
+<div class="row justify-content-center" style="margin-top: 6rem;">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Edycja danych użytkownika</h4>
+            </div>
+            <div class="card-body">
+                {% for label, messages in app.flashes %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+
+                {{ form_start(form, {'attr': {'autocomplete': 'off'}}) }}
+                    <div class="mb-3">
+                        {{ form_label(form.nickname) }}
+                        {{ form_widget(form.nickname, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.nickname) }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form_label(form.email) }}
+                        {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.email) }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form_label(form.plainPassword) }}
+                        {{ form_widget(form.plainPassword, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.plainPassword) }}
+                        <div class="form-text">Pozostaw puste, jeśli nie chcesz zmieniać hasła.</div>
+                    </div>
+                    <button type="submit" class="btn btn-success">Zapisz zmiany</button>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

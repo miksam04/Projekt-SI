@@ -41,6 +41,7 @@ class CommentController extends AbstractController
      * @return Response the response containing the rendered form
      */
     #[Route('/post/{id}/comment/add', name: 'comment_add', methods: ['GET', 'POST'])]
+    #[IsGranted(CommentVoter::CREATE, subject: 'comment')]
     public function add(int $id, Request $request): Response
     {
         $post = $this->postService->getPostById($id);
@@ -58,7 +59,11 @@ class CommentController extends AbstractController
             return $this->redirectToRoute('post_show', ['id' => $id]);
         }
 
-        return $this->redirectToRoute('post_show', ['id' => $id]);
+        return $this->render('post/show.html.twig', [
+            'post' => $post,
+            'comments' => $post->getComments(),
+            'comment_form' => $form->createView(),
+        ]);
     }
 
     /**
@@ -70,6 +75,7 @@ class CommentController extends AbstractController
      * @return Response the response containing the rendered form or redirect
      */
     #[Route('/comment/{id}/delete', name: 'comment_delete', methods: 'GET|DELETE')]
+    #[IsGranted(CommentVoter::DELETE, subject: 'comment')]
     public function delete(int $id, Request $request): Response
     {
         $comment = $this->commentService->getCommentById($id);

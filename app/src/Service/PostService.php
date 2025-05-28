@@ -85,10 +85,6 @@ class PostService implements PostServiceInterface
      */
     public function savePost(Post $post): void
     {
-        $author = $this->userRepository->findOneBy(['nickname' => 'Admin']);
-
-        
-        $post->setAuthor($author);
         $this->postRepository->savePost($post);
     }
 

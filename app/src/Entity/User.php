@@ -6,10 +6,11 @@
 
 namespace App\Entity;
 
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Class User.
@@ -22,19 +23,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
+    #[Assert\NotBlank]
+    #[Assert\Email]
     private ?string $email = null;
 
     #[ORM\Column(type: 'json')]
     private array $roles = [];
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
     private ?string $password = null;
 
-    #[ORM\Column(length: 20, nullable: true)]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 2, max: 20)]
+    #[ORM\Column(length: 20, nullable: false)]
     private ?string $nickname = null;
 
     /**
@@ -84,6 +90,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
+    }
+
+    /**
+     * Check if the user has a specific role.
+     *
+     * @param string $role the role to check
+     *
+     * @return bool true if the user has the role, false otherwise
+     */
+    public function hasRole(string $role): bool
+    {
+        return in_array($role, $this->getRoles(), true);
     }
 
     /**

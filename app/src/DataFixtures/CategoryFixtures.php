@@ -7,35 +7,32 @@
 namespace App\DataFixtures;
 
 use App\Entity\Category;
-use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use Faker\Factory;
+use Faker\Generator;
 
 /**
  * Class CategoryFixtures.
  *
  * This class is responsible for loading the initial data into the database.
  */
-class CategoryFixtures extends Fixture
+class CategoryFixtures extends AbstractBaseFixtures
 {
     /**
      * Load the fixtures into the database.
-     *
-     * @param ObjectManager $manager The object manager
      */
-    public function load(ObjectManager $manager): void
+    public function loadData(): void
     {
-        $faker = Factory::create();
-        $categoriesCount = 10;
-
-        for ($i = 0; $i < $categoriesCount; ++$i) {
-            $category = new Category();
-            $category->setName($faker->unique()->word());
-            $category->setSlug($category->getName());
-
-            $manager->persist($category);
+        if (!$this->manager instanceof ObjectManager || !$this->faker instanceof Generator) {
+            return;
         }
 
-        $manager->flush();
+        $this->createMany(10, 'category', function (int $i) {
+            $category = new Category();
+            $category->setName($this->faker->word());
+
+            return $category;
+        });
+
+        $this->manager->flush();
     }
 }

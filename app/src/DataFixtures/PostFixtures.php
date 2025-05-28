@@ -6,49 +6,38 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Category;
 use App\Entity\Post;
 use App\Entity\User;
-use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
-use Faker\Factory;
-use App\Entity\Category;
+use Doctrine\Persistence\ObjectManager;
+use Faker\Generator;
 
 /**
  * Class PostFixtures.
  *
  * This class is responsible for loading the initial data into the database.
  */
-class PostFixtures extends Fixture implements DependentFixtureInterface
+class PostFixtures extends AbstractBaseFixtures implements DependentFixtureInterface
 {
     /**
      * Load the fixtures.
-     *
-     * @param ObjectManager $manager The object manager
      */
-    public function load(ObjectManager $manager): void
+    public function loadData(): void
     {
-        $faker = Factory::create();
-        $categories = $categories = $manager->getRepository(Category::class)->findAll();
-
-
-        $author = $this->getReference('admin', User::class);
-
-        if (!$author) {
-            throw new \Exception('Author not found');
+        if (!$this->manager instanceof ObjectManager || !$this->faker instanceof Generator) {
+            return;
         }
 
-        for ($i = 0; $i < 30; ++$i) {
+        $this->createMany(15, 'post', function (int $i) {
             $post = new Post();
-            $post->setTitle($faker->sentence(6, true));
-            $post->setContent($faker->paragraph(3, true));
-            $post->setAuthor($author);
-            $post->setCategory($categories[array_rand($categories)]);
+            $post->setTitle($this->faker->sentence());
+            $post->setContent($this->faker->paragraphs(3, true));
+            $post->setAuthor($this->getRandomReference('user', User::class));
+            $post->setCategory($this->getRandomReference('category', Category::class));
 
-            $manager->persist($post);
-        }
-
-        $manager->flush();
+            return $post;
+        });
     }
 
     /**
@@ -60,6 +49,7 @@ class PostFixtures extends Fixture implements DependentFixtureInterface
     {
         return [
             UserFixtures::class,
+            CategoryFixtures::class,
         ];
     }
 }

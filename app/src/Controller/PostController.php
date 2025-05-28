@@ -83,6 +83,7 @@ class PostController extends AbstractController
         return $this->render('post/show.html.twig', [
             'post' => $post,
             'comments' => $comments,
+            'comment' => $comment,
             'comment_form' => $form->createView(),
         ]);
     }
@@ -117,9 +118,12 @@ class PostController extends AbstractController
      * @return Response the response object
      */
     #[\Symfony\Component\Routing\Attribute\Route('/post/create', name: 'post_create')]
+    #[IsGranted(PostVoter::CREATE)]
     public function createPost(Request $request): Response
     {
+        $user = $this->getUser();
         $post = new Post();
+        $post->setAuthor($user);
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
 
@@ -141,6 +145,7 @@ class PostController extends AbstractController
     }
 
     #[\Symfony\Component\Routing\Attribute\Route('/post/{id}/edit', requirements: ['id' => '[1-9]\d*'], name: 'post_edit', methods: 'GET|PUT')]
+    #[IsGranted(PostVoter::EDIT, subject: 'post')]
     /**
      * Displays the form to edit an existing post.
      *
@@ -174,7 +179,7 @@ class PostController extends AbstractController
                 $this->translator->trans('Post updated successfully')
             );
 
-            return $this->redirectToRoute('post_index');
+            return $this->redirectToRoute('post_show', ['id' => $post->getId(), 'returnTo' => $returnToUrl]);
         }
 
         return $this->render('post/edit.html.twig', [
@@ -195,6 +200,7 @@ class PostController extends AbstractController
      * @return Response the response object
      */
     #[\Symfony\Component\Routing\Attribute\Route('/post/{id}/delete', requirements: ['id' => '[1-9]\d*'], name: 'post_delete', methods: 'GET|DELETE')]
+    #[IsGranted(PostVoter::DELETE, subject: 'post')]
     public function deletePost(Request $request, Post $post, #[MapQueryParameter] int $page = 1): Response
     {
         $defaultReturnUrl = $this->generateUrl('post_index');
