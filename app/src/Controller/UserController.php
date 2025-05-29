@@ -24,11 +24,16 @@ class UserController extends AbstractController
     public $userService;
     public $translator;
     /**
-     * @var \Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface
+     * @var UserPasswordHasherInterface
      */
     public $userPasswordHasher;
+
     /**
-     * @param UserServiceInterface $userService the user service
+     * @param UserServiceInterface        $userService        the user service
+     * @param TranslatorInterface         $translator         the translator service
+     * @param UserPasswordHasherInterface $userPasswordHasher the password hasher service
+     *
+     * @return void
      */
     public function __construct(UserServiceInterface $userService, TranslatorInterface $translator, UserPasswordHasherInterface $userPasswordHasher)
     {
@@ -37,6 +42,13 @@ class UserController extends AbstractController
         $this->userPasswordHasher = $userPasswordHasher;
     }
 
+    /**
+     * Edit the user profile.
+     *
+     * @param Request $request the request object
+     *
+     * @return Response display the edit user form or redirect after successful update
+     */
     #[Route('/user/edit', name: 'user_edit', methods: ['GET', 'PUT'])]
     public function edit(Request $request): Response
     {

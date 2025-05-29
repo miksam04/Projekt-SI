@@ -25,6 +25,14 @@ class UserRepository extends ServiceEntityRepository
         parent::__construct($registry, User::class);
     }
 
+    /**
+     * Save a User entity.
+     *
+     * @param User $user  The user entity to save
+     * @param bool $flush Whether to flush the changes immediately
+     *
+     * @return void returns nothing
+     */
     public function saveUser(User $user, bool $flush = true): void
     {
         $this->GetEntityManager()->persist($user);

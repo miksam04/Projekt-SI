@@ -17,6 +17,13 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
  */
 class SecurityController extends AbstractController
 {
+    /**
+     * Displays the login form and handles authentication.
+     *
+     * @param AuthenticationUtils $authenticationUtils the authentication utils service to retrieve the last authentication error and last username
+     *
+     * @return Response returns the rendered login form or redirects to the post index if the user is already authenticated
+     */
     #[Route(path: '/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
@@ -35,6 +42,13 @@ class SecurityController extends AbstractController
         ]);
     }
 
+    /**
+     * Logs the user out.
+     *
+     * This method is intentionally left blank. The logout functionality is handled by Symfony's security system.
+     *
+     * @throws \LogicException
+     */
     #[Route(path: '/logout', name: 'app_logout')]
     public function logout(): void
     {

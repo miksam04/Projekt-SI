@@ -11,17 +11,41 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\User\UserInterface;
 use App\Entity\Comment;
 
+/**
+ * Class CommentVoter.
+ *
+ * This class is responsible for voting on whether a user can perform actions
+ * related to comments, such as creating or deleting them.
+ */
 final class CommentVoter extends Voter
 {
     public const DELETE = 'COMMENT_DELETE';
     public const CREATE = 'COMMENT_CREATE';
 
+    /**
+     * Determines if the voter supports the given attribute and subject.
+     *
+     * @param string $attribute The attribute to check
+     * @param mixed  $subject   The subject to check against
+     *
+     * @return bool True if the voter supports the attribute and subject, false otherwise
+     */
     protected function supports(string $attribute, mixed $subject): bool
     {
         return in_array($attribute, [self::DELETE, self::CREATE])
             && $subject instanceof Comment;
     }
 
+    /**
+     * Votes on whether the user can perform the action described by the attribute
+     * on the given subject.
+     *
+     * @param string         $attribute The attribute to check
+     * @param mixed          $subject   The subject to check against
+     * @param TokenInterface $token     The authentication token of the user
+     *
+     * @return bool True if the user can perform the action, false otherwise
+     */
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
         $user = $token->getUser();
@@ -39,11 +63,27 @@ final class CommentVoter extends Voter
         };
     }
 
+    /**
+     * Checks if the user can delete the comment.
+     *
+     * @param Comment       $comment The comment to check
+     * @param UserInterface $user    The user performing the action
+     *
+     * @return bool True if the user can delete the comment, false otherwise
+     */
     private function canDelete(Comment $comment, UserInterface $user): bool
     {
         return $user->hasRole('ROLE_ADMIN');
     }
 
+    /**
+     * Checks if the user can create a comment.
+     *
+     * @param Comment       $comment The comment to check
+     * @param UserInterface $user    The user performing the action
+     *
+     * @return bool True if the user can create a comment, false otherwise
+     */
     private function canCreate(Comment $comment, UserInterface $user): bool
     {
         return $user->hasRole('ROLE_USER') || $user->hasRole('ROLE_ADMIN');

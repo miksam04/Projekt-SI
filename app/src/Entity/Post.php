@@ -61,6 +61,11 @@ class Post
     #[ORM\JoinColumn(nullable: true)]
     private Collection $comments;
 
+    /**
+     * Post constructor.
+     *
+     * Initializes the comments collection.
+     */
     public function __construct()
     {
         $this->comments = new ArrayCollection();
