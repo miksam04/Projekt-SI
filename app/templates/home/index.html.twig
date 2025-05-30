@@ -6,7 +6,9 @@
 <header class="masthead">
     <div class="container py-5 text-center">
         <h1 class="mb-4">
+        {% if is_granted ('ROLE_ADMIN') %}
         <a href = "{{ path('category_index',) }}">Kategorie</h1>
+        {% endif %}
         <div class="d-flex flex-wrap justify-content-center gap-2">
             {% for category in categories %}
                 <a href="{{ path('category_filter', { 'id': category.id }) }}" class="btn btn-outline-primary btn-sm">

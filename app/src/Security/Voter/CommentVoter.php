@@ -73,7 +73,7 @@ final class CommentVoter extends Voter
      */
     private function canDelete(Comment $comment, UserInterface $user): bool
     {
-        return $user->hasRole('ROLE_ADMIN');
+        return $user->hasRole('ROLE_ADMIN') || $comment->getEmail() === $user->getEmail();
     }
 
     /**

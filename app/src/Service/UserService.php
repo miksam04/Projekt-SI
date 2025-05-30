@@ -10,6 +10,8 @@ use App\Interface\UserServiceInterface;
 use App\Repository\UserRepository;
 use App\Entity\User;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Knp\Component\Pager\PaginatorInterface;
+use Knp\Component\Pager\Pagination\PaginationInterface;
 
 /**
  * Class UserService.
@@ -18,19 +20,23 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
  */
 class UserService implements UserServiceInterface
 {
+    public $paginator;
     public $userRepository;
     public $userPasswordHasher;
+    private const ITEMS_PER_PAGE = 10;
 
     /**
      * UserService constructor.
      *
      * @param UserRepository              $userRepository     User repository
      * @param UserPasswordHasherInterface $userPasswordHasher Password hasher
+     * @param PaginatorInterface          $paginator          Paginator service
      */
-    public function __construct(UserRepository $userRepository, UserPasswordHasherInterface $userPasswordHasher)
+    public function __construct(UserRepository $userRepository, UserPasswordHasherInterface $userPasswordHasher, PaginatorInterface $paginator)
     {
         $this->userRepository = $userRepository;
         $this->userPasswordHasher = $userPasswordHasher;
+        $this->paginator = $paginator;
     }
 
     /**
@@ -72,5 +78,19 @@ class UserService implements UserServiceInterface
             }
             $user->setPassword($hashedPassword);
         }
+    }
+
+    /**
+     * Get paginated users.
+     *
+     * @param int $page Page number
+     *
+     * @return PaginationInterface Paginated list of users
+     */
+    public function getPaginatedUsers(int $page): PaginationInterface
+    {
+        $query = $this->userRepository->queryAll();
+
+        return $this->paginator->paginate($query, $page, self::ITEMS_PER_PAGE);
     }
 }

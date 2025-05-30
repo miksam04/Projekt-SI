@@ -79,12 +79,6 @@
         <div class="card-body">
             {{ form_start(comment_form, { action: path('comment_add', {'id': post.id}) }) }}
                 <div class="mb-3">
-                    {{ form_row(comment_form.email) }}
-                </div>
-                <div class="mb-3">
-                    {{ form_row(comment_form.nickname) }}
-                </div>
-                <div class="mb-3">
                     {{ form_row(comment_form.content) }}
                 </div>
                 <button type="submit" class="btn btn-success">Dodaj</button>

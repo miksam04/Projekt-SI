@@ -29,7 +29,7 @@ class Post
     private ?int $id = null;
 
     #[Assert\NotBlank]
-    #[Assert\Length(min: 3, max: 64)]
+    #[Assert\Length(min: 3, max: 255)]
     #[ORM\Column(length: 64)]
     #[Assert\Type('string')]
     private ?string $title = null;

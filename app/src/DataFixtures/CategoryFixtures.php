@@ -28,7 +28,7 @@ class CategoryFixtures extends AbstractBaseFixtures
 
         $this->createMany(10, 'category', function (int $i) {
             $category = new Category();
-            $category->setName($this->faker->word());
+            $category->setName($this->faker->unique()->word());
 
             return $category;
         });

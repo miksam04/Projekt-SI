@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+<h1 style="margin-top: 6rem;">Użytkownicy</h1>
+    {% for label, messages in app.flashes %}
+        <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+<table class="table" style="margin-top: 6rem;">
+    <tr>
+        <th>ID</th>
+        <th>Nick</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Akcje</th>
+    </tr>
+    {% for user in users %}
+        <tr>
+            <td>{{ user.id }}</td>
+            <td>{{ user.nickname }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.roles|join(', ') }}</td>
+            <td>
+                <a href="{{ path('admin_user_edit', {'id': user.id}) }}" class="btn btn-primary btn-sm">Edytuj</a>
+            </td>
+        </tr>
+    {% endfor %}
+</table>
+
+<div class="pagination justify-content-center">
+    {{ knp_pagination_render(users) }}
+</div>
+{% endblock %}

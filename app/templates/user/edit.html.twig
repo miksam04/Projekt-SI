@@ -18,7 +18,7 @@
                         </div>
                     {% endfor %}
                 {% endfor %}
-
+                {{ form_errors(form) }}
                 {{ form_start(form, {'attr': {'autocomplete': 'off'}}) }}
                     <div class="mb-3">
                         {{ form_label(form.nickname) }}

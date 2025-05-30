@@ -49,6 +49,10 @@ class CommentController extends AbstractController
         $comment = new Comment();
         $comment->setPost($post);
 
+        $user = $this->getUser();
+        $comment->setEmail($user->getEmail());
+        $comment->setNickname($user->getNickname());
+
         $form = $this->createForm(CommentType::class, $comment);
         $form->handleRequest($request);
 
