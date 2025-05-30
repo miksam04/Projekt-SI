@@ -8,6 +8,7 @@ namespace App\Service;
 
 use App\Interface\CategoryServiceInterface;
 use App\Repository\CategoryRepository;
+use App\Repository\PostRepository;
 use App\Entity\Category;
 use Knp\Component\Pager\PaginatorInterface;
 use Knp\Component\Pager\Pagination\PaginationInterface;
@@ -21,6 +22,7 @@ use Knp\Component\Pager\Pagination\PaginationInterface;
  */
 class CategoryService implements CategoryServiceInterface
 {
+    public $postRepository;
     public $categoryRepository;
     public $paginator;
     private const ITEMS_PER_PAGE = 10;
@@ -30,11 +32,13 @@ class CategoryService implements CategoryServiceInterface
      *
      * @param CategoryRepository $categoryRepository The category repository
      * @param PaginatorInterface $paginator          The paginator service
+     * @param PostRepository     $postRepository     The post repository
      */
-    public function __construct(CategoryRepository $categoryRepository, PaginatorInterface $paginator)
+    public function __construct(CategoryRepository $categoryRepository, PaginatorInterface $paginator, PostRepository $postRepository)
     {
         $this->categoryRepository = $categoryRepository;
         $this->paginator = $paginator;
+        $this->postRepository = $postRepository;
     }
 
     /**
@@ -93,5 +97,25 @@ class CategoryService implements CategoryServiceInterface
     public function delete(Category $category): void
     {
         $this->categoryRepository->delete($category);
+    }
+
+    /**
+     * Check if a category can be deleted.
+     *
+     * A category can be deleted if it has no associated posts.
+     *
+     * @param Category $category The category to check
+     *
+     * @return bool True if the category can be deleted, false otherwise
+     */
+    public function canBeDeleted(Category $category): bool
+    {
+        try {
+            $result = $this->postRepository->countByCategory($category);
+
+            return $result <= 0;
+        } catch (NoResultException|NonUniqueResultException) {
+            return false;
+        }
     }
 }

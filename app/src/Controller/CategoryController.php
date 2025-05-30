@@ -139,6 +139,14 @@ class CategoryController extends AbstractController
     #[\Symfony\Component\Routing\Attribute\Route('/categories/{id}/delete', name: 'category_delete', methods : 'GET|DELETE')]
     public function delete(Request $request, Category $category, #[MapQueryParameter] int $page = 1): Response
     {
+        if (!$this->categoryService->canBeDeleted($category)) {
+            $this->addFlash(
+                'warning',
+                $this->translator->trans('Category cannot be deleted because it is associated with posts or other categories')
+            );
+
+            return $this->redirectToRoute('category_index');
+        }
         $formBuilder = $this->createFormBuilder(null, [
             'method' => 'DELETE',
             'action' => $this->generateUrl('category_delete', ['id' => $category->getId()]),

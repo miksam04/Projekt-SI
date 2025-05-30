@@ -7,6 +7,7 @@
 namespace App\Repository;
 
 use App\Entity\Post;
+use App\Entity\Category;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
@@ -76,6 +77,24 @@ class PostRepository extends ServiceEntityRepository
     {
         $this->getEntityManager()->remove($post);
         $this->getEntityManager()->flush();
+    }
+
+    /**
+     * Count posts by category.
+     *
+     * @param Category $category The category to count posts for
+     *
+     * @return int The count of posts in the category
+     */
+    public function countByCategory(Category $category): int
+    {
+        $qb = $this->createQueryBuilder('post');
+
+        return $qb->select($qb->expr()->countDistinct('post.id'))
+            ->andWhere('post.category = :category')
+            ->setParameter(':category', $category)
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 
 

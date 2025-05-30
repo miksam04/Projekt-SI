@@ -52,4 +52,13 @@ interface CategoryServiceInterface
      * @param Category $category the category to delete
      */
     public function delete(Category $category): void;
+
+    /**
+     * Can the category be deleted?
+     *
+     * @param Category $category the category to check
+     *
+     * @return bool true if the category can be deleted, false otherwise
+     */
+    public function canBeDeleted(Category $category): bool;
 }
