@@ -25,41 +25,50 @@ class Post
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(type:'integer')]
     private ?int $id = null;
 
     #[Assert\NotBlank]
     #[Assert\Length(min: 3, max: 255)]
-    #[ORM\Column(length: 64)]
     #[Assert\Type('string')]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Assert\NotBlank]
     #[Assert\Length(min: 3, max: 65535)]
     #[Assert\Type('string')]
     private ?string $content = null;
 
     #[ORM\Column(type: 'datetime_immutable')]
     #[Gedmo\Timestampable(on: 'create')]
+    #[Assert\Type(\DateTimeImmutable::class)]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(type: 'datetime_immutable')]
     #[Gedmo\Timestampable(on: 'update')]
+    #[Assert\Type(\DateTimeImmutable::class)]
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $author = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(targetEntity: Category::class, fetch: 'EXTRA_LAZY')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Assert\NotNull]
+    #[Assert\NotBlank]
+    #[Assert\Type(Category::class)]
     private ?Category $category = null;
 
-    #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'post')]
+    #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'post', fetch: 'EXTRA_LAZY', orphanRemoval: true)]
     #[ORM\JoinColumn(nullable: true)]
     private Collection $comments;
+
+    /**
+     * @var Collection<int, Tag>
+     */
+    #[ORM\ManyToMany(targetEntity: Tag::class, fetch: 'EXTRA_LAZY', orphanRemoval: true, cascade: ['persist'])]
+    #[ORM\JoinTable(name: 'post_tags')]
+    #[Assert\Valid]
+    private Collection $tags;
 
     /**
      * Post constructor.
@@ -69,6 +78,7 @@ class Post
     public function __construct()
     {
         $this->comments = new ArrayCollection();
+        $this->tags = new ArrayCollection();
     }
 
     /**
@@ -233,5 +243,43 @@ class Post
     public function getComments(): Collection
     {
         return $this->comments;
+    }
+
+    /**
+     * @return Collection<int, Tag>
+     */
+    public function getTags(): Collection
+    {
+        return $this->tags;
+    }
+
+    /**
+     * Sets the tags associated with the post.
+     *
+     * @param Collection<int, Tag> $tag the collection of tags
+     *
+     * @return static the current instance for method chaining
+     */
+    public function addTag(Tag $tag): static
+    {
+        if (!$this->tags->contains($tag)) {
+            $this->tags->add($tag);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Removes a tag from the post.
+     *
+     * @param Tag $tag the tag to remove
+     *
+     * @return static the current instance for method chaining
+     */
+    public function removeTag(Tag $tag): static
+    {
+        $this->tags->removeElement($tag);
+
+        return $this;
     }
 }

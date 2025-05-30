@@ -13,6 +13,7 @@ use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use App\Interface\PostServiceInterface;
 use App\Interface\CategoryServiceInterface;
 use App\Service\CommentService;
+use App\Service\TagService;
 use App\Entity\Post;
 use App\Entity\Comment;
 use App\Form\Type\CommentType;
@@ -24,6 +25,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class PostController extends AbstractController
 {
+    public $tagService;
     public $commentService;
     public $postService;
     public $categoryService;
@@ -36,12 +38,14 @@ class PostController extends AbstractController
      * @param CategoryServiceInterface $categoryService the category service
      * @param TranslatorInterface      $translator      the translator service
      * @param CommentService           $commentService  the comment service
+     * @param TagService               $tagService      the tag service
      */
-    public function __construct(PostServiceInterface $postService, CategoryServiceInterface $categoryService, TranslatorInterface $translator, CommentService $commentService)
+    public function __construct(PostServiceInterface $postService, CategoryServiceInterface $categoryService, TranslatorInterface $translator, CommentService $commentService, TagService $tagService)
     {
         $this->postService = $postService;
         $this->categoryService = $categoryService;
         $this->commentService = $commentService;
+        $this->tagService = $tagService;
         $this->translator = $translator;
     }
 
@@ -107,6 +111,28 @@ class PostController extends AbstractController
             'posts' => $pagination,
             'categories' => $this->categoryService->getAllCategories(),
             'selectedCategory' => $category,
+        ]);
+    }
+
+    /**
+     * Filters posts by tag.
+     *
+     * @param int $id   the tag ID
+     * @param int $page the page number
+     *
+     * @return Response the response object
+     */
+    #[\Symfony\Component\Routing\Attribute\Route('/tag/{id}', name: 'tag_filter')]
+    public function filterByTag(int $id, #[MapQueryParameter] int $page = 1): Response
+    {
+        $tag = $this->tagService->getTagById($id);
+
+        $pagination = $this->postService->getPostsByTag($id, $page);
+
+        return $this->render('home/index.html.twig', [
+            'posts' => $pagination,
+            'categories' => $this->categoryService->getAllCategories(),
+            'selectedTag' => $tag,
         ]);
     }
 

@@ -14,12 +14,22 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use App\Form\DataTransformer\TagsDataTransformer;
 
 /**
  * Class PostType.
  */
 class PostType extends AbstractType
 {
+    /**
+     * TagsDataTransformer instance.
+     *
+     * @param TagsDataTransformer $tagsDataTransformer The tags data transformer
+     */
+    public function __construct(private readonly TagsDataTransformer $tagsDataTransformer)
+    {
+    }
+
     /**
      * Build form.
      *
@@ -70,7 +80,23 @@ class PostType extends AbstractType
                         'style' => 'height: 740px',
                     ],
                 ]
+            )
+            ->add(
+                'tags',
+                TextType::class,
+                [
+                    'label' => 'tags',
+                    'required' => false,
+                    'attr' => [
+                        'placeholder' => 'Enter tags (comma separated)',
+                        'max_length' => 64,
+                    ],
+                ]
             );
+
+        $builder->get('tags')->addModelTransformer(
+            $this->tagsDataTransformer
+        );
     }
 
     /**

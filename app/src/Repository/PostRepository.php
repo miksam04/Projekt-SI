@@ -97,6 +97,22 @@ class PostRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
+    /**
+     * Query posts by tag.
+     *
+     * @param int $id The tag ID
+     *
+     * @return QueryBuilder The query builder
+     */
+    public function queryByTag(int $id): QueryBuilder
+    {
+        return $this->createQueryBuilder('post')
+            ->innerJoin('post.tags', 'tag')
+            ->andWhere('tag.id = :id')
+            ->setParameter('id', $id)
+            ->orderBy('post.createdAt', 'DESC');
+    }
+
 
 
 

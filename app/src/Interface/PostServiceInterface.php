@@ -55,4 +55,14 @@ interface PostServiceInterface
      * @param Post $post the post object to delete
      */
     public function deletePost(Post $post): void;
+
+    /**
+     * Get posts by tag.
+     *
+     * @param string $id   the tag ID
+     * @param int    $page the page number
+     *
+     * @return PaginationInterface the paginated posts
+     */
+    public function getPostsByTag(int $id, int $page): PaginationInterface;
 }

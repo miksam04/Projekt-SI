@@ -99,4 +99,19 @@ class PostService implements PostServiceInterface
     {
         $this->postRepository->deletePost($post);
     }
+
+    /**
+     * Get posts by tag.
+     *
+     * @param int $id   The tag id
+     * @param int $page The page number
+     *
+     * @return PaginationInterface The paginated posts
+     */
+    public function getPostsByTag(int $id, int $page): PaginationInterface
+    {
+        $query = $this->postRepository->queryByTag($id);
+
+        return $this->paginator->paginate($query, $page, self::ITEMS_PER_PAGE);
+    }
 }
