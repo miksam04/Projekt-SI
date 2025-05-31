@@ -11,6 +11,7 @@ use App\Entity\Category;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
+use App\Entity\Tag;
 
 /**
  * PostRepository class.
@@ -93,6 +94,25 @@ class PostRepository extends ServiceEntityRepository
         return $qb->select($qb->expr()->countDistinct('post.id'))
             ->andWhere('post.category = :category')
             ->setParameter(':category', $category)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * Count posts by tag.
+     *
+     * @param Tag $tag The tag to count posts for
+     *
+     * @return int The count of posts with the tag
+     */
+    public function countByTag(Tag $tag): int
+    {
+        $qb = $this->createQueryBuilder('post');
+
+        return $qb->select($qb->expr()->countDistinct('post.id'))
+            ->innerJoin('post.tags', 'tag')
+            ->andWhere('tag.id = :tag')
+            ->setParameter(':tag', $tag)
             ->getQuery()
             ->getSingleScalarResult();
     }

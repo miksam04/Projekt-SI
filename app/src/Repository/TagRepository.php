@@ -27,6 +27,45 @@ class TagRepository extends ServiceEntityRepository
         parent::__construct($registry, Tag::class);
     }
 
+    /**
+     * save tag.
+     *
+     * @param Tag $tag The tag to save
+     *
+     * @return void returns nothing
+     */
+    public function save(Tag $tag): void
+    {
+        $this->getEntityManager()->persist($tag);
+        $this->getEntityManager()->flush();
+    }
+
+    /**
+     * Delete a tag.
+     *
+     * @param Tag $tag The tag to delete
+     *
+     * @return void returns nothing
+     */
+    public function delete(Tag $tag): void
+    {
+        $this->getEntityManager()->remove($tag);
+        $this->getEntityManager()->flush();
+    }
+
+    /**
+     * Query all tags.
+     *
+     * @return Tag[] Returns an array of Tag objects
+     */
+    public function queryAll(): array
+    {
+        return $this->createQueryBuilder('t')
+            ->orderBy('t.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
     //    /**
     //     * @return Tag[] Returns an array of Tag objects
     //     */

@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tagi - Mój Blog{% endblock %}
+
+{% block body %}
+<div class="container py-5 mt-5">
+    <h1 class="text-center mb-4">Tagi</h1>
+
+    {% for label, messages in app.flashes %}
+        <div class="alert alert-{{ label }}">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+
+    {% block content %}
+        <div class="d-flex justify-content-end mb-3">
+            {# Możesz dodać przycisk do tworzenia tagu, jeśli chcesz #}
+            {# <a href="{{ path('tag_create') }}" class="btn btn-primary">Dodaj nowy tag</a> #}
+        </div>
+
+        {% block table %}
+        <table class="table table-striped table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Nazwa</th>
+                    <th scope="col">Akcje</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tag in tags %}
+                    <tr>
+                        <th scope="row">{{ loop.index }}</th>
+                        <td>{{ tag.title }}</td>
+                        <td>
+                            <a href="{{ path('tag_edit', { id: tag.id, page: tags.currentPageNumber }) }}" class="btn btn-sm btn-info">Edytuj</a>
+                            <a href="{{ path('tag_delete', { id: tag.id, page: tags.currentPageNumber }) }}" class="btn btn-sm btn-danger">Usuń</a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="3" class="text-center">Brak tagów do wyświetlenia.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endblock %}
+    {% endblock %}
+</div>
+<div class="pagination justify-content-center">
+    {{ knp_pagination_render(tags) }}
+</div>
+{% endblock %}

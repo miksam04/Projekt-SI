@@ -19,8 +19,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
 #[ORM\UniqueConstraint(name: 'tag_title_unique', columns: ['title'])]
 #[UniqueEntity(fields: ['title'])]
 #[ORM\Table(name: 'tags')]
-#[ORM\Table(name: 'tags')]
-#[ORM\Entity]
 class Tag
 {
     #[ORM\Id]

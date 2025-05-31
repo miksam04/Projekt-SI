@@ -45,6 +45,7 @@ class CategoryController extends AbstractController
     #[\Symfony\Component\Routing\Attribute\Route('/categories', name: 'category_index')]
     public function index(#[MapQueryParameter] int $page = 1): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $pagination = $this->categoryService->getPaginatedCategories($page);
 
         return $this->render('category/index.html.twig', [
@@ -63,6 +64,7 @@ class CategoryController extends AbstractController
     #[\Symfony\Component\Routing\Attribute\Route('/categories/create', name: 'category_create')]
     public function create(Request $request, #[MapQueryParameter] int $page = 1): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $category = new Category();
         $form = $this->createForm(CategoryType::class, $category);
         $form->handleRequest($request);
@@ -98,6 +100,7 @@ class CategoryController extends AbstractController
     #[\Symfony\Component\Routing\Attribute\Route('/categories/{id}/edit', name: 'category_edit', methods : 'GET|PUT')]
     public function edit(Request $request, Category $category, #[MapQueryParameter] int $page = 1): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $form = $this->createForm(
             CategoryType::class,
             $category,
@@ -139,6 +142,7 @@ class CategoryController extends AbstractController
     #[\Symfony\Component\Routing\Attribute\Route('/categories/{id}/delete', name: 'category_delete', methods : 'GET|DELETE')]
     public function delete(Request $request, Category $category, #[MapQueryParameter] int $page = 1): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         if (!$this->categoryService->canBeDeleted($category)) {
             $this->addFlash(
                 'warning',

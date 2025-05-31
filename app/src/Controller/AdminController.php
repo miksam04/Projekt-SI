@@ -51,10 +51,20 @@ class AdminController extends AbstractController
     #[\Symfony\Component\Routing\Attribute\Route('/admin/users/{id}/edit', name: 'admin_user_edit')]
     public function edit(User $user, Request $request, UserService $userService): Response
     {
+        $adminCountBefore = $userService->countAdmins();
+        $rolesBefore = $user->getRoles();
         $form = $this->createForm(AdminType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $rolesAfter = $form->get('roles')->getData();
+
+            if (in_array('ROLE_ADMIN', $rolesBefore, true) && !in_array('ROLE_ADMIN', $rolesAfter, true) && $adminCountBefore <= 1) {
+                $this->addFlash('warning', 'You cannot remove the last admin role.');
+
+                return $this->redirectToRoute('user_index');
+            }
+
             $plainPassword = $form->get('plainPassword')->getData();
             $userService->updatePassword($user, $plainPassword);
             $userService->saveUser($user);
@@ -66,7 +76,6 @@ class AdminController extends AbstractController
         return $this->render('admin/edit.html.twig', [
             'form' => $form->createView(),
             'user' => $user,
-            '',
         ]);
     }
 }

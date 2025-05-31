@@ -31,6 +31,7 @@ class Post
     #[Assert\NotBlank]
     #[Assert\Length(min: 3, max: 255)]
     #[Assert\Type('string')]
+    #[ORM\Column(type: 'string', length: 255)]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT)]

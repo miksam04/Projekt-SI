@@ -93,4 +93,14 @@ class UserService implements UserServiceInterface
 
         return $this->paginator->paginate($query, $page, self::ITEMS_PER_PAGE);
     }
+
+    /**
+     * Count total number of admins.
+     *
+     * @return int Total number of users
+     */
+    public function countAdmins(): int
+    {
+        return $this->userRepository->countAdmins();
+    }
 }

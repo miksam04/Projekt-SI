@@ -1,0 +1,24 @@
+{% extends 'tag/index.html.twig' %}
+
+{% block title %}Usuń tag - Mój Blog{% endblock %}
+
+{% block content %}
+<div class="card mb-5">
+    <div class="card-header">
+        <h2>Usuń tag</h2>
+    </div>
+    <div class="card-body">
+        <p style="font-size: 2.25rem; font-weight: bold;">
+            Czy na pewno chcesz usunąć tag <strong>{{ tag.title }}</strong>?
+        </p>
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+            <button type="submit" class="btn btn-danger">Potwierdź</button>
+            <a href="{{ path('tag_index', {page: tags.currentPageNumber}) }}" class="btn btn-secondary">Anuluj</a>
+        {{ form_end(form) }}
+    </div>
+</div>
+{% block table %}
+    {{ parent() }}
+{% endblock %}
+{% endblock %}

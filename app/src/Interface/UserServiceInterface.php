@@ -45,4 +45,11 @@ interface UserServiceInterface
      * @param string|null $plainPassword Plain text password to set, or null to remove password
      */
     public function updatePassword(User $user, ?string $plainPassword): void;
+
+    /**
+     * Count total number of admins.
+     *
+     * @return int Total number of admins
+     */
+    public function countAdmins(): int;
 }

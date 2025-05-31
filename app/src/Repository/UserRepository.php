@@ -40,20 +40,6 @@ class UserRepository extends ServiceEntityRepository
     }
 
     /**
-     * Find users with the 'ROLE_ADMIN' role.
-     *
-     * @return User[] Returns an array of User objects
-     */
-    public function getAdmins(): array
-    {
-        return $this->createQueryBuilder('u')
-            ->where('JSON_CONTAINS(u.roles, :role) = 1')
-            ->setParameter('role', json_encode('ROLE_ADMIN'))
-            ->getQuery()
-            ->getResult();
-    }
-
-    /**
      * Query all users.
      *
      * @return User[] Returns an array of User objects
@@ -64,6 +50,27 @@ class UserRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    /**
+     * Count the number of users with the 'ROLE_ADMIN' role.
+     *
+     * @return int The count of admin users
+     */
+    public function countAdmins(): int
+    {
+        $users = $this->findAll();
+        $adminCount = 0;
+        foreach ($users as $user) {
+            if (in_array('ROLE_ADMIN', $user->getRoles(), true)) {
+                ++$adminCount;
+            }
+        }
+
+        return $adminCount;
+    }
+
+
+
 
     //    /**
     //     * @return User[] Returns an array of User objects
