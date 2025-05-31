@@ -15,6 +15,7 @@
         <th>Nick</th>
         <th>Email</th>
         <th>Role</th>
+        <th>Status</th>
         <th>Akcje</th>
     </tr>
     {% for user in users %}
@@ -23,6 +24,13 @@
             <td>{{ user.nickname }}</td>
             <td>{{ user.email }}</td>
             <td>{{ user.roles|join(', ') }}</td>
+            <td>
+            {% if user.isBlocked %}
+                <span class="badge bg-danger">Blocked</span>
+            {% else %}
+                <span class="badge bg-success">Active</span>
+            {% endif %}
+            </td>
             <td>
                 <a href="{{ path('admin_user_edit', {'id': user.id}) }}" class="btn btn-primary btn-sm">Edytuj</a>
             </td>

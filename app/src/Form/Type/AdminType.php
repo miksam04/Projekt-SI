@@ -14,6 +14,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 /**
  * Class UserType.
@@ -80,6 +81,14 @@ class AdminType extends AbstractType
                     ],
                     'expanded' => true,
                     'multiple' => true,
+                ]
+            )
+            ->add(
+                'isBlocked',
+                CheckboxType::class,
+                [
+                    'label' => 'Blocked',
+                    'required' => false,
                 ]
             );
     }

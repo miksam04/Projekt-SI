@@ -45,6 +45,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 20, nullable: false, unique: true)]
     private ?string $nickname = null;
 
+    #[ORM\Column(type: 'boolean')]
+    private bool $isBlocked = false;
+
     /**
      * User constructor.
      *
@@ -167,6 +170,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setNickname(?string $nickname): static
     {
         $this->nickname = $nickname;
+
+        return $this;
+    }
+
+    /**
+     * Checks if the user is blocked.
+     *
+     * @return bool true if the user is blocked, false otherwise
+     */
+    public function isBlocked(): bool
+    {
+        return $this->isBlocked;
+    }
+
+    /**
+     * Sets the blocked status of the user.
+     *
+     * @param bool $isBlocked the blocked status of the user
+     *
+     * @return self the current instance for method chaining
+     */
+    public function setIsBlocked(bool $isBlocked): self
+    {
+        $this->isBlocked = $isBlocked;
 
         return $this;
     }
