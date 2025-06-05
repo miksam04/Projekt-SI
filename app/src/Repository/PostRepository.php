@@ -42,12 +42,17 @@ class PostRepository extends ServiceEntityRepository
     {
         $queryBuilder = $this->createQueryBuilder('post')
             ->select(
-                'partial post.{id, createdAt, updatedAt, title}',
+                'partial post.{id, createdAt, updatedAt, title, status}',
                 'partial category.{id, name}',
                 'partial tags.{id, title}'
             )
             ->join('post.category', 'category')
             ->leftJoin('post.tags', 'tags');
+
+        if (!$author instanceof User) {
+            $queryBuilder->andWhere('post.status = :status')
+                ->setParameter('status', 'published');
+        }
 
         return $this->applyFiltersToList($queryBuilder, $filters);
     }

@@ -47,7 +47,12 @@
             <div class="post-preview">
                 <a href="{{ path('post_show', { 'id': post.id }) }}">
                     <h2 class="post-title">{{ post.title }}</h2>
-                    <h3 class="post-subtitle">{{ post.content|slice(0, 150) ~ '...' }}</h3>
+                    {% if is_granted('ROLE_ADMIN')%}
+                        <span class="badge {{ post.status == 'published' ? 'bg-success' : 'bg-secondary' }}">
+                            {{ post.status == 'published' ? 'Opublikowany' : 'Szkic' }}
+                        </span>
+                    {% endif %}
+                    <h3 class="post-subtitle">{{ post.content|slice(0, 150)}}</h3>
                 </a>
                 <p class="post-meta">
                     Opublikowano przez {{ post.author.nickname }} dnia {{ post.createdAt|date('d-m-Y H:i') }}

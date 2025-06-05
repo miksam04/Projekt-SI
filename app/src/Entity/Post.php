@@ -71,6 +71,9 @@ class Post
     #[Assert\Valid]
     private Collection $tags;
 
+    #[ORM\Column(type: 'string', length: 20, options: ['default' => 'draft'])]
+    private string $status = 'draft';
+
     /**
      * Post constructor.
      *
@@ -280,6 +283,30 @@ class Post
     public function removeTag(Tag $tag): static
     {
         $this->tags->removeElement($tag);
+
+        return $this;
+    }
+
+    /**
+     * Gets the status of the post.
+     *
+     * @return string the status of the post
+     */
+    public function getStatus(): string
+    {
+        return $this->status;
+    }
+
+    /**
+     * Sets the status of the post.
+     *
+     * @param string $status the status of the post
+     *
+     * @return self the current instance for method chaining
+     */
+    public function setStatus(string $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }

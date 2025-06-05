@@ -14,6 +14,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use App\Form\DataTransformer\TagsDataTransformer;
 
 /**
@@ -91,6 +92,20 @@ class PostType extends AbstractType
                         'placeholder' => 'Enter tags (comma separated)',
                         'max_length' => 64,
                     ],
+                ]
+            )
+            ->add(
+                'status',
+                ChoiceType::class,
+                [
+                    'choices' => [
+                        'Draft' => 'draft',
+                        'Published' => 'published',
+                    ],
+                    'label' => 'Post Status',
+                    'required' => true,
+                    'expanded' => true,
+                    'multiple' => false,
                 ]
             );
 

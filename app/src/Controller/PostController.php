@@ -112,7 +112,6 @@ class PostController extends AbstractController
         $post->setAuthor($user);
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $this->postService->savePost($post);
 
