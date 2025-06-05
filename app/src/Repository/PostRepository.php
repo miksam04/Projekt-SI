@@ -12,6 +12,8 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\Tag;
+use App\Entity\User;
+use App\Dto\PostListFiltersDto;
 
 /**
  * PostRepository class.
@@ -31,12 +33,23 @@ class PostRepository extends ServiceEntityRepository
     /**
      * Query all posts.
      *
+     * @param User               $author  The author of the posts
+     * @param PostListFiltersDto $filters The filters for the post list
+     *
      * @return QueryBuilder The query builder
      */
-    public function queryAll(): QueryBuilder
+    public function queryAll(?User $author, PostListFiltersDto $filters): QueryBuilder
     {
-        return $this->createQueryBuilder('post')
-            ->orderBy('post.createdAt', 'DESC');
+        $queryBuilder = $this->createQueryBuilder('post')
+            ->select(
+                'partial post.{id, createdAt, updatedAt, title}',
+                'partial category.{id, name}',
+                'partial tags.{id, title}'
+            )
+            ->join('post.category', 'category')
+            ->leftJoin('post.tags', 'tags');
+
+        return $this->applyFiltersToList($queryBuilder, $filters);
     }
 
     /**
@@ -132,6 +145,30 @@ class PostRepository extends ServiceEntityRepository
             ->setParameter('id', $id)
             ->orderBy('post.createdAt', 'DESC');
     }
+
+    /**
+     * Apply filters to the post list query.
+     *
+     * @param QueryBuilder       $queryBuilder The query builder
+     * @param PostListFiltersDto $filters      The filters for the post list
+     *
+     * @return QueryBuilder The modified query builder
+     */
+    private function applyFiltersToList(QueryBuilder $queryBuilder, PostListFiltersDto $filters): QueryBuilder
+    {
+        if ($filters->category instanceof Category) {
+            $queryBuilder->andWhere('post.category = :category')
+                ->setParameter('category', $filters->category);
+        }
+
+        if ($filters->tag instanceof Tag) {
+            $queryBuilder->andWhere('tags IN (:tag)')
+                ->setParameter('tag', $filters->tag);
+        }
+
+        return $queryBuilder;
+    }
+
 
 
 

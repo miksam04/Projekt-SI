@@ -19,6 +19,7 @@ use App\Entity\Comment;
 use App\Form\Type\CommentType;
 use App\Form\Type\PostType;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use App\Dto\PostListInputFiltersDto;
 
 /**
  * Controller responsible for managing posts and and filtering them.
@@ -52,14 +53,18 @@ class PostController extends AbstractController
     /**
      * Displays the list of posts.
      *
-     * @param int $page the page number
+     * @param PostListInputFiltersDto $filters the filters for the post list
+     * @param int                     $page    the page number
      *
      * @return Response the response object
      */
     #[\Symfony\Component\Routing\Attribute\Route('/', name: 'post_index', methods: 'GET')]
-    public function index(#[MapQueryParameter] int $page = 1): Response
+    public function index(#[MapQueryString(resolver: PostListInputFiltersDtoResolver::class)] PostListInputFiltersDto $filters, #[MapQueryParameter] int $page = 1): Response
     {
-        $pagination = $this->postService->getPaginatedPosts($page);
+        $user = $this->getUser();
+
+        $pagination = $this->postService->getPaginatedPosts($page, $user, $filters);
+
 
         return $this->render('home/index.html.twig', [
             'posts' => $pagination,
@@ -89,50 +94,6 @@ class PostController extends AbstractController
             'comments' => $comments,
             'comment' => $comment,
             'comment_form' => $form->createView(),
-        ]);
-    }
-
-    /**
-     * Filters posts by category.
-     *
-     * @param int $id   the category ID
-     * @param int $page the page number
-     *
-     * @return Response the response object
-     */
-    #[\Symfony\Component\Routing\Attribute\Route('/category/{id}', name: 'category_filter')]
-    public function filterByCategory(int $id, #[MapQueryParameter] int $page = 1): Response
-    {
-        $category = $this->categoryService->getCategoryById($id);
-
-        $pagination = $this->postService->getPostsByCategory($id, $page);
-
-        return $this->render('home/index.html.twig', [
-            'posts' => $pagination,
-            'categories' => $this->categoryService->getAllCategories(),
-            'selectedCategory' => $category,
-        ]);
-    }
-
-    /**
-     * Filters posts by tag.
-     *
-     * @param int $id   the tag ID
-     * @param int $page the page number
-     *
-     * @return Response the response object
-     */
-    #[\Symfony\Component\Routing\Attribute\Route('/tag/{id}', name: 'tag_filter')]
-    public function filterByTag(int $id, #[MapQueryParameter] int $page = 1): Response
-    {
-        $tag = $this->tagService->getTagById($id);
-
-        $pagination = $this->postService->getPostsByTag($id, $page);
-
-        return $this->render('home/index.html.twig', [
-            'posts' => $pagination,
-            'categories' => $this->categoryService->getAllCategories(),
-            'selectedTag' => $tag,
         ]);
     }
 

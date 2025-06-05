@@ -7,7 +7,10 @@
 namespace App\Interface;
 
 use App\Entity\Post;
+use App\Entity\User;
 use Knp\Component\Pager\Pagination\PaginationInterface;
+use App\Dto\PostListInputFiltersDto;
+use App\Dto\PostListFiltersDto;
 
 /**
  * Interface PostServiceInterface.
@@ -17,11 +20,13 @@ interface PostServiceInterface
     /**
      * Return all posts.
      *
-     * @param int $page the page number
+     * @param int                     $page    the page number
+     * @param User|null               $user    the user object or null if not filtering by user
+     * @param PostListInputFiltersDto $filters the filters for the post list
      *
      * @return Post[]
      */
-    public function getPaginatedPosts(int $page): PaginationInterface;
+    public function getPaginatedPosts(int $page, ?User $user, PostListInputFiltersDto $filters): PaginationInterface;
 
     /**
      * Return a post by its ID.
@@ -65,4 +70,13 @@ interface PostServiceInterface
      * @return PaginationInterface the paginated posts
      */
     public function getPostsByTag(int $id, int $page): PaginationInterface;
+
+    /**
+     * Prepare filters for post input.
+     *
+     * @param PostListInputFiltersDto $filters the filters to prepare
+     *
+     * @return array the prepared filters
+     */
+    public function prepareFilters(PostListInputFiltersDto $filters): PostListFiltersDto;
 }

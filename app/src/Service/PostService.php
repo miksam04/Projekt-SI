@@ -6,7 +6,11 @@
 
 namespace App\Service;
 
+use App\Dto\PostListInputFiltersDto;
+use App\Dto\PostListFiltersDto;
 use App\Interface\PostServiceInterface;
+use App\Interface\CategoryServiceInterface;
+use App\Interface\TagServiceInterface;
 use App\Repository\PostRepository;
 use App\Repository\UserRepository;
 use Knp\Component\Pager\PaginatorInterface;
@@ -27,26 +31,39 @@ class PostService implements PostServiceInterface
     /**
      * Constructor.
      *
-     * @param PostRepository     $postRepository The post repository
-     * @param PaginatorInterface $paginator      The paginator service
-     * @param UserRepository     $userRepository The user repository
+     * @param PostRepository           $postRepository  The post repository
+     * @param PaginatorInterface       $paginator       The paginator service
+     * @param UserRepository           $userRepository  The user repository
+     * @param CategoryServiceInterface $categoryService The category service
+     * @param TagServiceInterface      $tagService      The tag service
      */
-    public function __construct(private readonly PostRepository $postRepository, private readonly PaginatorInterface $paginator, private readonly UserRepository $userRepository)
+    public function __construct(private readonly PostRepository $postRepository, private readonly PaginatorInterface $paginator, private readonly UserRepository $userRepository, private readonly CategoryServiceInterface $categoryService, private readonly TagServiceInterface $tagService)
     {
     }
 
     /**
      * Get paginated posts.
      *
-     * @param int $page The page number
+     * @param int                     $page    The page number
+     * @param User|null               $author  The author of the posts or null if not filtering by author
+     * @param PostListInputFiltersDto $filters The input filters for the post list
      *
      * @return PaginationInterface The paginated posts
      */
-    public function getPaginatedPosts(int $page): PaginationInterface
+    public function getPaginatedPosts(int $page, ?User $author, PostListInputFiltersDto $filters): PaginationInterface
     {
-        $query = $this->postRepository->queryAll();
+        $filters = $this->prepareFilters($filters);
 
-        return $this->paginator->paginate($query, $page, self::ITEMS_PER_PAGE);
+        return $this->paginator->paginate(
+            $this->postRepository->queryAll($author, $filters),
+            $page,
+            self::ITEMS_PER_PAGE,
+            [
+                'sortFieldAllowList' => ['ppost.id', 'post.createdAt', 'post.updatedAt', 'post.title', 'category.title'],
+                'defaultSortFieldName' => 'post.updatedAt',
+                'defaultSortDirection' => 'DESC',
+            ]
+        );
     }
 
     /**
@@ -113,5 +130,20 @@ class PostService implements PostServiceInterface
         $query = $this->postRepository->queryByTag($id);
 
         return $this->paginator->paginate($query, $page, self::ITEMS_PER_PAGE);
+    }
+
+    /**
+     * Get posts by filters.
+     *
+     * @param PostListInputFiltersDto $filters The input filters
+     *
+     * @return PaginationInterface The paginated posts
+     */
+    public function prepareFilters(PostListInputFiltersDto $filters): PostListFiltersDto
+    {
+        return new PostListFiltersDto(
+            null !== $filters->categoryId ? $this->categoryService->getCategoryById($filters->categoryId) : null,
+            null !== $filters->tagId ? $this->tagService->getTagById($filters->tagId) : null
+        );
     }
 }
