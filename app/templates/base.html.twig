@@ -47,6 +47,10 @@
           <li class="nav-item"><a class="nav-link" href="{{ path('user_register')}}">Zarejestruj się</a></li>
         {% endif %}
       </ul>
+      <form class="d-flex ms-3" method="get" action="{{ path('post_index') }}">
+        <input class="form-control form-control-sm me-2" type="search" name="search" placeholder="Szukaj postów..." value="{{ app.request.get('phrase') }}">
+        <button class="btn btn-outline-primary btn-sm" type="submit">Szukaj</button>
+      </form>
     </div>
   </div>
 </nav>

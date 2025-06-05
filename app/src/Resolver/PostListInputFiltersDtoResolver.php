@@ -34,7 +34,8 @@ class PostListInputFiltersDtoResolver implements ValueResolverInterface
 
         $categoryId = $request->query->get('categoryId');
         $tagId = $request->query->get('tagId');
+        $search = $request->query->get('search');
 
-        return [new PostListInputFiltersDto($categoryId, $tagId)];
+        return [new PostListInputFiltersDto($categoryId, $tagId, $search)];
     }
 }

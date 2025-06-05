@@ -166,6 +166,11 @@ class PostRepository extends ServiceEntityRepository
                 ->setParameter('tag', $filters->tag);
         }
 
+        if ($filters->search) {
+            $queryBuilder->andWhere('post.title LIKE :search OR post.content LIKE :search')
+                ->setParameter('search', '%'.$filters->search.'%');
+        }
+
         return $queryBuilder;
     }
 

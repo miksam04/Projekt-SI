@@ -143,7 +143,8 @@ class PostService implements PostServiceInterface
     {
         return new PostListFiltersDto(
             null !== $filters->categoryId ? $this->categoryService->getCategoryById($filters->categoryId) : null,
-            null !== $filters->tagId ? $this->tagService->getTagById($filters->tagId) : null
+            null !== $filters->tagId ? $this->tagService->getTagById($filters->tagId) : null,
+            $filters->search ?? null
         );
     }
 }

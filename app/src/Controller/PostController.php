@@ -65,7 +65,6 @@ class PostController extends AbstractController
 
         $pagination = $this->postService->getPaginatedPosts($page, $user, $filters);
 
-
         return $this->render('home/index.html.twig', [
             'posts' => $pagination,
             'categories' => $this->categoryService->getAllCategories(),
