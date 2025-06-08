@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-<h1 style="margin-top: 6rem;">Użytkownicy</h1>
+<h1 style="margin-top: 6rem;">{{ 'user.list'|trans }}</h1>
     {% for label, messages in app.flashes %}
         <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
             {% for message in messages %}
@@ -11,12 +11,12 @@
     {% endfor %}
 <table class="table" style="margin-top: 6rem;">
     <tr>
-        <th>ID</th>
-        <th>Nick</th>
-        <th>Email</th>
-        <th>Role</th>
-        <th>Status</th>
-        <th>Akcje</th>
+        <th>{{ 'ID'|trans }}</th>
+        <th>{{ 'form.nickname'|trans }}</th>
+        <th>{{ 'form.email'|trans }}</th>
+        <th>{{ 'form.roles'|trans }}</th>
+        <th>{{ 'form.status'|trans }}</th>
+        <th>{{ 'actions'|trans }}</th>
     </tr>
     {% for user in users %}
         <tr>
@@ -26,13 +26,13 @@
             <td>{{ user.roles|join(', ') }}</td>
             <td>
             {% if user.isBlocked %}
-                <span class="badge bg-danger">Blocked</span>
+                <span class="badge bg-danger">{{ 'user.status.blocked'|trans }}</span>
             {% else %}
-                <span class="badge bg-success">Active</span>
+                <span class="badge bg-success">{{ 'user.status.active'|trans }}</span>
             {% endif %}
             </td>
             <td>
-                <a href="{{ path('admin_user_edit', {'id': user.id}) }}" class="btn btn-primary btn-sm">Edytuj</a>
+                <a href="{{ path('admin_user_edit', {'id': user.id}) }}" class="btn btn-primary btn-sm">{{ 'button.edit'|trans }}</a>
             </td>
         </tr>
     {% endfor %}

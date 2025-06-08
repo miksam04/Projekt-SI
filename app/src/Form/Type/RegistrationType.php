@@ -36,10 +36,10 @@ class RegistrationType extends AbstractType
                 'nickname',
                 TextType::class,
                 [
-                    'label' => 'Nickname',
+                    'label' => 'form.label.nickname',
                     'attr' => [
                         'required' => true,
-                        'placeholder' => 'Enter nickname',
+                        'placeholder' => 'form.placeholder.nickname',
                         'max_length' => 20,
                     ],
                 ]
@@ -48,10 +48,10 @@ class RegistrationType extends AbstractType
                 'email',
                 EmailType::class,
                 [
-                    'label' => 'Email',
+                    'label' => 'form.label.email',
                     'attr' => [
                         'required' => true,
-                        'placeholder' => 'Enter email',
+                        'placeholder' => 'form.placeholder.email',
                         'max_length' => 180,
                     ],
                 ]
@@ -60,12 +60,12 @@ class RegistrationType extends AbstractType
                 'plainPassword',
                 PasswordType::class,
                 [
-                    'label' => 'Password',
+                    'label' => 'form.label.password',
                     'required' => true,
                     'mapped' => false,
                     'attr' => [
 
-                        'placeholder' => 'Enter password',
+                        'placeholder' => 'form.placeholder.password',
                         'max_length' => 255,
                     ],
                 ]

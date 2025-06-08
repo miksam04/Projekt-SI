@@ -44,10 +44,10 @@ class TagType extends AbstractType
                 'title',
                 TextType::class,
                 [
-                    'label' => 'title',
+                    'label' => 'form.label.tag_title',
                     'required' => true,
                     'attr' => [
-                        'placeholder' => 'Enter tag title',
+                        'placeholder' => 'form.placeholder.tag_title',
                         'max_length' => 64,
                     ],
                 ]

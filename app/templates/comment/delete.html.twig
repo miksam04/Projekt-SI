@@ -1,18 +1,18 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Usuń komentarz{% endblock %}
+{% block title %}{{ 'comment.delete.title'|trans }}{% endblock %}
 
 {% block body %}
 <div class="card mb-5" style="margin-top: 6rem;">
     <div class="card-header">
-        <h2>Usuń komentarz</h2>
+        <h2>{{ 'comment.delete.title'|trans }}</h2>
     </div>
     <div class="card-body">
-        <p>Czy na pewno chcesz usunąć komentarz <strong>{{ comment.nickname|e }}</strong> z <strong>{{ comment.createdAt|date('Y-m-d H:i') }}</strong>?</p>
+        <p>{{ 'comment.delete.confirmation'|trans }}<br><br> <strong>{{ comment.nickname|e }}</strong></p>
         <div class="mb-3">{{ comment.content|e }}</div>
         {{ form_start(form) }}
-            <button type="submit" class="btn btn-danger">Potwierdź</button>
-            <a href="{{ path('post_show', {'id': postId}) }}" class="btn btn-secondary">Anuluj</a>
+            <button type="submit" class="btn btn-danger">{{ 'button.delete_confirmation'|trans }}</button>
+            <a href="{{ path('post_show', {'id': postId}) }}" class="btn btn-secondary">{{ 'button.cancel'|trans }}</a>
         {{ form_end(form) }}
     </div>
 </div>

@@ -36,10 +36,10 @@ class UserType extends AbstractType
                 'nickname',
                 TextType::class,
                 [
-                    'label' => 'Nickname',
+                    'label' => 'form.label.nickname',
                     'attr' => [
                         'required' => true,
-                        'placeholder' => 'Enter nickname',
+                        'placeholder' => 'form.placeholder.nickname',
                         'max_length' => 20,
                     ],
                 ]
@@ -48,10 +48,10 @@ class UserType extends AbstractType
                 'email',
                 EmailType::class,
                 [
-                    'label' => 'Email',
+                    'label' => 'form.label.email',
                     'attr' => [
                         'required' => true,
-                        'placeholder' => 'Enter email',
+                        'placeholder' => 'form.placeholder.email',
                         'max_length' => 180,
                     ],
                 ]
@@ -60,11 +60,11 @@ class UserType extends AbstractType
                 'plainPassword',
                 PasswordType::class,
                 [
-                    'label' => 'Password',
+                    'label' => 'form.label.password',
                     'mapped' => false,
                     'required' => false,
                     'attr' => [
-                        'placeholder' => 'Enter new password (optional)',
+                        'placeholder' => 'form.placeholder.optional_password',
                         'max_length' => 255,
                     ],
                 ]

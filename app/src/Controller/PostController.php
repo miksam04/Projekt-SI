@@ -67,7 +67,7 @@ class PostController extends AbstractController
     public function index(#[MapQueryString(resolver: PostListInputFiltersDtoResolver::class)] PostListInputFiltersDto $filters, #[MapQueryParameter] int $page = 1): Response
     {
         $user = $this->getUser();
-
+        
         $pagination = $this->postService->getPaginatedPosts($page, $user, $filters);
 
         return $this->render('home/index.html.twig', [
@@ -126,7 +126,7 @@ class PostController extends AbstractController
 
             $this->addFlash(
                 'success',
-                $this->translator->trans('Post created successfully')
+                $this->translator->trans('message.%entity%.created_successfully', ['%entity%' => $this->translator->trans('entity.post')])
             );
 
             return $this->redirectToRoute('post_index');
@@ -184,7 +184,7 @@ class PostController extends AbstractController
 
             $this->addFlash(
                 'success',
-                $this->translator->trans('Post updated successfully')
+                $this->translator->trans('message.%entity%.updated_successfully', ['%entity%' => $this->translator->trans('entity.post')])
             );
 
             return $this->redirectToRoute('post_show', ['id' => $post->getId(), 'returnTo' => $returnToUrl]);
@@ -215,15 +215,11 @@ class PostController extends AbstractController
 
         $returnToUrl = $request->query->get('returnTo', $defaultReturnUrl);
 
-        $form = $this->createForm(
-            PostType::class,
-            $post,
-            [
-                'method' => 'DELETE',
-                'action' => $this->generateUrl('post_delete', ['id' => $post->getId(), 'returnTo' => $returnToUrl]),
-                'disabled' => true,
-            ]
-        );
+        $formBuilder = $this->createFormBuilder(null, [
+            'method' => 'DELETE',
+            'action' => $this->generateUrl('post_delete', ['id' => $post->getId(), 'returnTo' => $returnToUrl]),
+        ]);
+        $form = $formBuilder->getForm();
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -234,7 +230,7 @@ class PostController extends AbstractController
 
             $this->addFlash(
                 'success',
-                $this->translator->trans('Post deleted successfully')
+                $this->translator->trans('message.%entity%.deleted_successfully', ['%entity%' => $this->translator->trans('entity.post')])
             );
 
             return $this->redirectToRoute('post_index');

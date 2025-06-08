@@ -82,7 +82,7 @@ class TagController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->tagService->save($tag);
 
-            $this->addFlash('success', $this->translator->trans('Tag edited successfully'));
+            $this->addFlash('success', $this->translator->trans('message.%entity%.updated_successfully', ['%entity%' => $this->translator->trans('entity.tag')]));
 
             return $this->redirectToRoute('tag_index');
         }
@@ -108,7 +108,7 @@ class TagController extends AbstractController
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         if (!$this->tagService->canBeDeleted($tag)) {
-            $this->addFlash('warning', $this->translator->trans('Tag cannot be deleted because it is associated with posts.'));
+            $this->addFlash('warning', $this->translator->trans('message.%entity%.cannot_be_deleted', ['%entity%' => $this->translator->trans('entity.tag')]));
 
             return $this->redirectToRoute('tag_index', ['page' => $page]);
         }
@@ -125,7 +125,7 @@ class TagController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->tagService->delete($tag);
 
-            $this->addFlash('success', $this->translator->trans('Tag deleted successfully'));
+            $this->addFlash('success', $this->translator->trans('message.%entity%.deleted_successfully', ['%entity%' => $this->translator->trans('entity.tag')]));
 
             return $this->redirectToRoute('tag_index', ['page' => $page]);
         }

@@ -49,10 +49,10 @@ class PostType extends AbstractType
                 'title',
                 TextType::class,
                 [
-                    'label' => 'Post Title',
+                    'label' => 'form.label.post_title',
                     'required' => true,
                     'attr' => [
-                        'placeholder' => 'Enter post title',
+                        'placeholder' => 'form.placeholder.post_title',
                         'max_length' => 128,
                     ],
                 ]
@@ -63,11 +63,11 @@ class PostType extends AbstractType
                 [
                     'class' => Category::class,
                     'choice_label' => 'name',
-                    'placeholder' => 'Select a category',
-                    'label' => 'Post category',
+                    'placeholder' => 'form.placeholder.post_category',
+                    'label' => 'form.label.post_category',
                     'required' => true,
                     'attr' => [
-                        'placeholder' => 'Enter post category',
+                        'placeholder' => 'form.placeholder.post_category',
                         'max_length' => 128,
                     ],
                 ]
@@ -76,10 +76,10 @@ class PostType extends AbstractType
                 'content',
                 TextareaType::class,
                 [
-                    'label' => 'Post Content',
+                    'label' => 'form.label.post_content',
                     'required' => true,
                     'attr' => [
-                        'placeholder' => 'Enter post content',
+                        'placeholder' => 'form.placeholder.post_content',
                         'max_length' => 2048,
                         'style' => 'height: 740px',
                     ],
@@ -89,10 +89,10 @@ class PostType extends AbstractType
                 'tags',
                 TextType::class,
                 [
-                    'label' => 'tags',
+                    'label' => 'form.label.tags',
                     'required' => false,
                     'attr' => [
-                        'placeholder' => 'Enter tags (comma separated)',
+                        'placeholder' => 'form.placeholder.tags',
                         'max_length' => 64,
                     ],
                 ]
@@ -102,10 +102,10 @@ class PostType extends AbstractType
                 ChoiceType::class,
                 [
                     'choices' => [
-                        'Draft' => 'draft',
-                        'Published' => 'published',
+                        'form.status.draft' => 'draft',
+                        'form.status.published' => 'published',
                     ],
-                    'label' => 'Post Status',
+                    'label' => 'form.label.post_status',
                     'required' => true,
                     'expanded' => true,
                     'multiple' => false,
@@ -116,7 +116,7 @@ class PostType extends AbstractType
                 FileType::class,
                 [
                     'mapped' => false,
-                    'label' => 'Files',
+                    'label' => 'form.label.post_images',
                     'required' => false,
                     'multiple' => true,
                     'constraints' => [

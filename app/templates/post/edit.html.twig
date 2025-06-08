@@ -1,40 +1,29 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edytuj Post{% endblock %}
+{% block title %}{{ 'post.edit'|trans }}{% endblock %}
 
 {% block body %}
 <div class="container mt-5">
-    <h1 class="text-center">Edytuj Post</h1>
+    <h1 class="text-center">{{ 'post.edit'|trans }}</h1>
     <div class="row justify-content-center">
         <div class="col-md-8">
             {{ form_start(form) }}
                 <div class="mb-3">
-                    {{ form_label(form.title, 'Tytuł', {'label_attr': {'class': 'form-label'}}) }}
-                    {{ form_widget(form.title, {'attr': {'class': 'form-control'}}) }}
-                    {{ form_errors(form.title) }}
-                </div>
-                <div class="mb-3">
-                    {{ form_label(form.category, 'Kategoria', {'label_attr': {'class': 'form-label'}}) }}
-                    {{ form_widget(form.category, {'attr': {'class': 'form-control'}}) }}
-                    {{ form_errors(form.category) }}
-                </div>
-                <div class="mb-3">
-                    {{ form_label(form.content, 'Treść', {'label_attr': {'class': 'form-label'}}) }}
-                    {{ form_widget(form.content, {'attr': {'class': 'form-control', 'rows': 10}}) }}
-                    {{ form_errors(form.content) }}
-                </div>
+                    {{ form_widget(form)}}
                 <div>
                 {% for image in post.images %}
                     <img src="{{ asset('uploads/images/' ~ image.fileName) }}" style="max-width:100px;">
                     <label>
                         <input type="checkbox" name="delete_images[]" value="{{ image.id }}">
-                        Usuń ten obrazek
+                        {{
+    'post.delete_image'|trans({'%imageName%': image.fileName})
+                        }}
                     </label>
                 </div>
                 {% endfor %}
                 <div class="d-flex justify-content-end gap-2">
-                    <button type="submit" class="btn btn-primary">Zapisz zmiany</button>
-                    <a href="{{ cancel_url }}" class="btn btn-secondary">Powrót</a>
+                    <button type="submit" class="btn btn-primary">{{ 'button.save_changes'|trans }}</button>
+                    <a href="{{ cancel_url }}" class="btn btn-secondary">{{ 'button.cancel'|trans }}</a>
                 </div>
             {{ form_end(form) }}
         </div>

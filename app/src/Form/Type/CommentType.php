@@ -29,10 +29,10 @@ class CommentType extends AbstractType
     {
         $builder
             ->add('content', TextareaType::class, [
-                'label' => 'Comment',
+                'label' => 'form.label.comment',
                 'required' => true,
                 'attr' => [
-                    'placeholder' => 'Write your comment here',
+                    'placeholder' => 'form.placeholder.comment',
                     'max_length' => 512,
                 ],
             ]);

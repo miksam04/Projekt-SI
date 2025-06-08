@@ -28,37 +28,36 @@
     </style>
   </head>
   <body class="text-center">
-    <main class="form-signin w-100 m-auto">
+    <main class="form-signin w-100 mt-5">
       <form method="post">
-        <h1 class="h3 mb-3 fw-normal">Register</h1>
-        
+        <h1 class="h3 mb-3 fw-normal">{{ 'registration.title'|trans }}</h1>
+
         {% for flash_error in app.flashes('error') %}
           <div class="alert alert-danger">{{ flash_error }}</div>
         {% endfor %}
         {% for flash_success in app.flashes('success') %}
           <div class="alert alert-success">{{ flash_success }}</div>
         {% endfor %}
-        
         <div class="form-floating">
-        {{ form_errors(form) }}
-          {{ form_widget(form.nickname, {'attr': {'class': 'form-control', 'placeholder': 'Nickname'}}) }}
-          <label for="{{ form.nickname.vars.id }}">Nickname</label>
+          {{ form_errors(form) }}
+          {{ form_widget(form.nickname)}}
+          <label for="{{ form.nickname.vars.id }}" >{{ 'form.nickname'|trans }}</label>
           {{ form_errors(form.nickname) }}
         </div>
         <div class="form-floating">
-          {{ form_widget(form.email, {'attr': {'class': 'form-control', 'placeholder': 'Email'}}) }}
-          <label for="{{ form.email.vars.id }}">Email address</label>
+          {{ form_widget(form.email) }}
+          <label for="{{ form.email.vars.id }}">{{ 'form.email'|trans }}</label>
           {{ form_errors(form.email) }}
         </div>
         <div class="form-floating">
-          {{ form_widget(form.plainPassword, {'attr': {'class': 'form-control', 'placeholder': 'Password'}}) }}
-          <label for="{{ form.plainPassword.vars.id }}">Password</label>
+          {{ form_widget(form.plainPassword) }}
+          <label for="{{ form.plainPassword.vars.id }}">{{ 'form.password'|trans }}</label>
           {{ form_errors(form.plainPassword) }}
         </div>
 
         {{ form_rest(form) }}
 
-        <button class="w-100 btn btn-lg btn-primary" type="submit">Register</button>
+        <button class="w-100 btn btn-lg btn-primary" type="submit">{{ 'button.register'|trans }}</button>
         <p class="mt-3 mb-3 text-muted">&copy; {{ "now"|date("Y") }}</p>
       </form>
     </main>

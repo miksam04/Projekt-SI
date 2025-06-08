@@ -1,13 +1,10 @@
 {% extends 'base.html.twig' %}
 {% block body %}
 <div style="margin-top: 6rem; max-width: 600px; margin-left: auto; margin-right: auto;">
-    <h1>Edycja użytkownika: {{ user.nickname }}</h1>
+    <h1>{{ 'admin.edit.title'|trans }} {{ user.nickname }}</h1>
     {{ form_start(form) }}
-        {{ form_row(form.nickname) }}
-        {{ form_row(form.email) }}
-        {{ form_row(form.plainPassword) }}
-        {{ form_row(form.roles) }}
-        <button class="btn btn-success">Zapisz</button>
+        {{ form_widget(form) }}
+        <button class="btn btn-success">{{ 'button.save_changes'|trans }}</button>
     {{ form_end(form) }}
 </div
 {% endblock %}

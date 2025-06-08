@@ -38,10 +38,10 @@ class AdminType extends AbstractType
                 'nickname',
                 TextType::class,
                 [
-                    'label' => 'Nickname',
+                    'label' => 'form.label.nickname',
                     'attr' => [
                         'required' => true,
-                        'placeholder' => 'Enter nickname',
+                        'placeholder' => 'form.placeholder.nickname',
                         'max_length' => 20,
                     ],
                 ]
@@ -50,10 +50,10 @@ class AdminType extends AbstractType
                 'email',
                 EmailType::class,
                 [
-                    'label' => 'Email',
+                    'label' => 'form.label.email',
                     'attr' => [
                         'required' => true,
-                        'placeholder' => 'Enter email',
+                        'placeholder' => 'form.placeholder.email',
                         'max_length' => 180,
                     ],
                 ]
@@ -62,11 +62,11 @@ class AdminType extends AbstractType
                 'plainPassword',
                 PasswordType::class,
                 [
-                    'label' => 'Password',
+                    'label' => 'form.label.password',
                     'mapped' => false,
                     'required' => false,
                     'attr' => [
-                        'placeholder' => 'Enter new password (optional)',
+                        'placeholder' => 'form.placeholder.optional_password',
                         'max_length' => 255,
                     ],
                 ]
@@ -75,9 +75,9 @@ class AdminType extends AbstractType
                 'roles',
                 ChoiceType::class,
                 [
-                    'label' => 'Roles',
+                    'label' => 'form.label.roles',
                     'choices' => [
-                        'Admin' => 'ROLE_ADMIN',
+                        'roles.administrator' => 'ROLE_ADMIN',
                     ],
                     'expanded' => true,
                     'multiple' => true,
@@ -87,7 +87,7 @@ class AdminType extends AbstractType
                 'isBlocked',
                 CheckboxType::class,
                 [
-                    'label' => 'Blocked',
+                    'label' => 'form.label.is_blocked',
                     'required' => false,
                 ]
             );

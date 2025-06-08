@@ -76,7 +76,7 @@ class CategoryController extends AbstractController
 
             $this->addFlash(
                 'success',
-                $this->translator->trans('Category created successfully')
+                $this->translator->trans('message.%entity%.created_successfully', ['%entity%' => $this->translator->trans('entity.category')])
             );
 
             return $this->redirectToRoute('category_index');
@@ -118,7 +118,7 @@ class CategoryController extends AbstractController
 
             $this->addFlash(
                 'success',
-                $this->translator->trans('Category updated successfully')
+                $this->translator->trans('message.%entity%.updated_successfully', ['%entity%' => $this->translator->trans('entity.category')])
             );
 
             return $this->redirectToRoute('category_index');
@@ -146,7 +146,7 @@ class CategoryController extends AbstractController
         if (!$this->categoryService->canBeDeleted($category)) {
             $this->addFlash(
                 'warning',
-                $this->translator->trans('Category cannot be deleted because it is associated with posts or other categories')
+                $this->translator->trans('message.%entity%.cannot_be_deleted', ['%entity%' => $this->translator->trans('entity.category')])
             );
 
             return $this->redirectToRoute('category_index');
@@ -166,7 +166,7 @@ class CategoryController extends AbstractController
 
             $this->addFlash(
                 'success',
-                $this->translator->trans('Category deleted successfully')
+                $this->translator->trans('message.%entity%.deleted_successfully', ['%entity%' => $this->translator->trans('entity.category')])
             );
 
             return $this->redirectToRoute('category_index');

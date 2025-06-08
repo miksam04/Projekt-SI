@@ -32,10 +32,10 @@ class CategoryType extends AbstractType
                 'name',
                 TextType::class,
                 [
-                    'label' => 'Category Name',
+                    'label' => 'form.label.category_name',
                     'required' => true,
                     'attr' => [
-                        'placeholder' => 'Enter category name',
+                        'placeholder' => 'form.placeholder.category_name',
                         'max_length' => 64,
                     ],
                 ]

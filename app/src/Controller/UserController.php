@@ -6,6 +6,7 @@
 
 namespace App\Controller;
 
+use Symfony\Component\Security\Core\User\UserInterface;
 use App\Entity\User;
 use App\Form\Type\UserType;
 use App\Interface\UserServiceInterface;
@@ -53,7 +54,7 @@ class UserController extends AbstractController
     public function edit(Request $request): Response
     {
         $user = $this->getUser();
-        if (!$user instanceof \Symfony\Component\Security\Core\User\UserInterface) {
+        if (!$user instanceof UserInterface) {
             throw $this->createNotFoundException('User not found');
         }
 
@@ -72,7 +73,7 @@ class UserController extends AbstractController
             $this->userService->updatePassword($user, $plainPassword);
             $this->userService->saveUser($user);
 
-            $this->addFlash('success', $this->translator->trans('User updated successfully'));
+            $this->addFlash('success', $this->translator->trans('message.%entity%.updated_successfully', ['%entity%' => $this->translator->trans('entity.user')]));
 
             return $this->redirectToRoute('user_edit');
         }

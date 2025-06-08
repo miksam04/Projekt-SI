@@ -14,6 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Controller responsible for managing comments.
@@ -28,7 +29,7 @@ class CommentController extends AbstractController
      * @param CommentServiceInterface $commentService the service for managing comments
      * @param PostService             $postService    the service for managing posts
      */
-    public function __construct(private readonly CommentServiceInterface $commentService, private readonly PostService $postService)
+    public function __construct(private readonly CommentServiceInterface $commentService, private readonly PostService $postService, private readonly TranslatorInterface $translator)
     {
     }
 
@@ -58,7 +59,7 @@ class CommentController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->commentService->saveComment($comment);
-            $this->addFlash('success', 'Comment added successfully!');
+            $this->addFlash('success', $this->translator->trans('message.%entity%.created_successfully', ['%entity%' => $this->translator->trans('entity.comment')]));
 
             return $this->redirectToRoute('post_show', ['id' => $id]);
         }
@@ -95,7 +96,7 @@ class CommentController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->commentService->deleteComment($comment);
-            $this->addFlash('success', 'Comment deleted successfully!');
+            $this->addFlash('success', $this->translator->trans('message.%entity%.deleted_successfully', ['%entity%' => $this->translator->trans('entity.comment')]));
 
             return $this->redirectToRoute('post_show', ['id' => $postId]);
         }

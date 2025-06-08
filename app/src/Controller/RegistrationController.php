@@ -61,7 +61,7 @@ class RegistrationController extends AbstractController
             $plainPassword = $form->get('plainPassword')->getData();
             $this->userService->updatePassword($user, $plainPassword);
             $this->userService->saveUser($user);
-            $this->addFlash('success', $this->translator->trans('Registration successful!'));
+            $this->addFlash('success', $this->translator->trans('message.registration_success'));
 
             return $this->redirectToRoute('app_login');
         }

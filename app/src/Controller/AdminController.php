@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * AdminController handles administrative tasks related to users.
@@ -49,7 +50,7 @@ class AdminController extends AbstractController
      * @return Response Rendered response
      */
     #[\Symfony\Component\Routing\Attribute\Route('/admin/users/{id}/edit', name: 'admin_user_edit')]
-    public function edit(User $user, Request $request, UserService $userService): Response
+    public function edit(User $user, Request $request, UserService $userService, TranslatorInterface $translator): Response
     {
         $adminCountBefore = $userService->countAdmins();
         $rolesBefore = $user->getRoles();
@@ -60,7 +61,7 @@ class AdminController extends AbstractController
             $rolesAfter = $form->get('roles')->getData();
 
             if (in_array('ROLE_ADMIN', $rolesBefore, true) && !in_array('ROLE_ADMIN', $rolesAfter, true) && $adminCountBefore <= 1) {
-                $this->addFlash('warning', 'You cannot remove the last admin role.');
+                $this->addFlash('warning', $translator->trans('admin.last_admin_cannot_remove'));
 
                 return $this->redirectToRoute('user_index');
             }
@@ -68,7 +69,7 @@ class AdminController extends AbstractController
             $plainPassword = $form->get('plainPassword')->getData();
             $userService->updatePassword($user, $plainPassword);
             $userService->saveUser($user);
-            $this->addFlash('success', 'User updated successfully.');
+            $this->addFlash('success', $translator->trans('message.%entity%.updated_successfully', ['%entity%' => $this->translator->trans('entity.user')]));
 
             return $this->redirectToRoute('user_index');
         }
