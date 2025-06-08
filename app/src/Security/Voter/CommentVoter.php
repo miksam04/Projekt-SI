@@ -21,6 +21,7 @@ final class CommentVoter extends Voter
 {
     public const DELETE = 'COMMENT_DELETE';
     public const CREATE = 'COMMENT_CREATE';
+    public const EDIT = 'COMMENT_EDIT';
 
     /**
      * Determines if the voter supports the given attribute and subject.
@@ -32,8 +33,11 @@ final class CommentVoter extends Voter
      */
     protected function supports(string $attribute, mixed $subject): bool
     {
-        return in_array($attribute, [self::DELETE, self::CREATE])
-            && $subject instanceof Comment;
+        if (in_array($attribute, [self::EDIT, self::DELETE])) {
+            return $subject instanceof Comment;
+        }
+
+        return self::CREATE === $attribute;
     }
 
     /**
@@ -52,13 +56,12 @@ final class CommentVoter extends Voter
         if (!$user instanceof UserInterface) {
             return false;
         }
-        if (!$subject instanceof Comment) {
-            return false;
-        }
+
 
         return match ($attribute) {
             self::DELETE => $this->canDelete($subject, $user),
-            self::CREATE => $this->canCreate($subject, $user),
+            self::CREATE => $this->canCreate($user),
+            self::EDIT => $this->canEdit($subject, $user),
             default => false,
         };
     }
@@ -79,13 +82,25 @@ final class CommentVoter extends Voter
     /**
      * Checks if the user can create a comment.
      *
-     * @param Comment       $comment The comment to check
-     * @param UserInterface $user    The user performing the action
+     * @param UserInterface $user The user performing the action
      *
      * @return bool True if the user can create a comment, false otherwise
      */
-    private function canCreate(Comment $comment, UserInterface $user): bool
+    private function canCreate(UserInterface $user): bool
     {
-        return $user->hasRole('ROLE_USER') || $user->hasRole('ROLE_ADMIN');
+        return $user instanceof UserInterface && $user->hasRole('ROLE_USER');
+    }
+
+    /**
+     * Checks if the user can edit the comment.
+     *
+     * @param Comment       $comment The comment to check
+     * @param UserInterface $user    The user performing the action
+     *
+     * @return bool True if the user can edit the comment, false otherwise
+     */
+    private function canEdit(Comment $comment, UserInterface $user): bool
+    {
+        return $comment->getEmail() === $user->getEmail();
     }
 }

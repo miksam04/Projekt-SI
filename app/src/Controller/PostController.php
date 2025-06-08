@@ -22,6 +22,8 @@ use App\Form\Type\CommentType;
 use App\Form\Type\PostType;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use App\Dto\PostListInputFiltersDto;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+use App\Security\Voter\PostVoter;
 
 /**
  * Controller responsible for managing posts and and filtering them.
@@ -138,8 +140,9 @@ class PostController extends AbstractController
         ]);
     }
 
-    #[\Symfony\Component\Routing\Attribute\Route('/post/{id}/edit', requirements: ['id' => '[1-9]\d*'], name: 'post_edit', methods: 'GET|PUT')]
     #[IsGranted(PostVoter::EDIT, subject: 'post')]
+    #[\Symfony\Component\Routing\Attribute\Route('/post/{id}/edit', requirements: ['id' => '[1-9]\d*'], name: 'post_edit', methods: 'GET|PUT')]
+
     /**
      * Displays the form to edit an existing post.
      *

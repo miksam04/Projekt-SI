@@ -53,8 +53,9 @@ class RegistrationController extends AbstractController
     #[\Symfony\Component\Routing\Attribute\Route('/register', name: 'user_register')]
     public function register(Request $request): Response
     {
-        if ($this->getUser()) {
+        if ($this->getUser() instanceof \Symfony\Component\Security\Core\User\UserInterface) {
             $this->addFlash('warning', $this->translator->trans('message.already_logged_in'));
+
             return $this->redirectToRoute('post_index');
         }
 

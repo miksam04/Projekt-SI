@@ -32,8 +32,11 @@ final class PostVoter extends Voter
      */
     protected function supports(string $attribute, mixed $subject): bool
     {
-        return in_array($attribute, [self::EDIT, self::DELETE, self::CREATE])
-            && $subject instanceof Post;
+        if (in_array($attribute, [self::EDIT, self::DELETE])) {
+            return $subject instanceof Post;
+        }
+
+        return self::CREATE === $attribute;
     }
 
     /**
@@ -86,7 +89,7 @@ final class PostVoter extends Voter
      */
     private function canEdit(Post $post, UserInterface $user): bool
     {
-        return $post->getAuthor() === $user;
+        return $post->getAuthor()->getId() === $user->getId();
     }
 
     /**

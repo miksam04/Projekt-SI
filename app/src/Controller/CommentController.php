@@ -15,6 +15,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+use App\Security\Voter\CommentVoter;
 
 /**
  * Controller responsible for managing comments.
@@ -37,14 +39,15 @@ class CommentController extends AbstractController
     /**
      * Displays the form to add a comment to a post.
      *
-     * @param int     $id      the ID of the post to which the comment will be added
-     * @param Request $request the HTTP request object
+     * @param int          $id      the ID of the post to which the comment will be added
+     * @param Request      $request the HTTP request object
+     * @param Comment|null $comment the comment entity, if it exists (optional)
      *
      * @return Response the response containing the rendered form
      */
     #[Route('/post/{id}/comment/add', name: 'comment_add', methods: ['GET', 'POST'])]
     #[IsGranted(CommentVoter::CREATE, subject: 'comment')]
-    public function add(int $id, Request $request): Response
+    public function add(int $id, Request $request, ?Comment $comment): Response
     {
         $post = $this->postService->getPostById($id);
 
@@ -73,16 +76,49 @@ class CommentController extends AbstractController
     }
 
     /**
+     * Displays the form to edit an existing comment.
+     *
+     * @param int          $id      the ID of the comment to edit
+     * @param Request      $request the HTTP request object
+     * @param Comment|null $comment the comment entity, if it exists (optional)
+     *
+     * @return Response the response containing the rendered form or redirect
+     */
+    #[Route('/comment/{id}/edit', name: 'comment_edit', methods: 'GET|PUT')]
+    #[IsGranted(CommentVoter::EDIT, subject: 'comment')]
+    public function edit(int $id, Request $request, ?Comment $comment): Response
+    {
+        $form = $this->createForm(CommentType::class, $comment, [
+            'action' => $this->generateUrl('comment_edit', ['id' => $comment->getId()]),
+            'method' => 'PUT',
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->commentService->saveComment($comment);
+            $this->addFlash('success', $this->translator->trans('message.%entity%.updated_successfully', ['%entity%' => $this->translator->trans('entity.comment')]));
+
+            return $this->redirectToRoute('post_show', ['id' => $comment->getPost()->getId()]);
+        }
+
+        return $this->render('comment/edit.html.twig', [
+            'form' => $form->createView(),
+            'comment' => $comment,
+        ]);
+    }
+
+    /**
      * Deletes a comment.
      *
-     * @param int     $id      the ID of the comment to delete
-     * @param Request $request the HTTP request object
+     * @param int          $id      the ID of the comment to delete
+     * @param Request      $request the HTTP request object
+     * @param Comment|null $comment the comment entity, if it exists (optional)
      *
      * @return Response the response containing the rendered form or redirect
      */
     #[Route('/comment/{id}/delete', name: 'comment_delete', methods: 'GET|DELETE')]
     #[IsGranted(CommentVoter::DELETE, subject: 'comment')]
-    public function delete(int $id, Request $request): Response
+    public function delete(int $id, Request $request, ?Comment $comment): Response
     {
         $comment = $this->commentService->getCommentById($id);
 

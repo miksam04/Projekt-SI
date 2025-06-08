@@ -22,7 +22,7 @@ class SecurityController extends AbstractController
      * Displays the login form and handles authentication.
      *
      * @param AuthenticationUtils $authenticationUtils the authentication utils service to retrieve the last authentication error and last username
-     * @param TranslatorInterface $translator the translator service to translate messages
+     * @param TranslatorInterface $translator          the translator service to translate messages
      *
      * @return Response returns the rendered login form or redirects to the post index if the user is already authenticated
      */
@@ -31,6 +31,7 @@ class SecurityController extends AbstractController
     {
         if ($this->getUser() instanceof UserInterface) {
             $this->addFlash('warning', $translator->trans('message.already_logged_in'));
+
             return $this->redirectToRoute('post_index');
         }
         // get the login error if there is one

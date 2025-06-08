@@ -70,6 +70,9 @@
                             <span>
                                 <strong>{{ comment.nickname|e }}</strong>
                                 <span class="text-muted small">({{ comment.email|e }})</span>
+                                {% if is_granted('COMMENT_EDIT', comment) %}
+                                <a href="{{ path('comment_edit', {'id': comment.id}) }}" class="btn btn-sm btn-outline-primary ms-2">{{ 'button.edit'|trans }}</a>
+                                {% endif %}
                                 {% if is_granted('COMMENT_DELETE', comment) %}
                                 <a href="{{ path('comment_delete', {'id': comment.id}) }}" class="btn btn-sm btn-outline-danger ms-2">{{ 'button.delete'|trans }}</a>
                                 {% endif %}
@@ -85,7 +88,7 @@
             <div class="alert alert-info mb-0">{{ 'post.no_comments'|trans }}</div>
         {% endif %}
     </div>
-    {% if is_granted('COMMENT_CREATE', comment) %}
+    {% if is_granted('COMMENT_CREATE') %}
     <h3 class="mb-3">{{ 'post.add_comment'|trans }}</h3>
     <div class="card mb-5">
         <div class="card-body">

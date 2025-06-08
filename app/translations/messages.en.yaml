@@ -151,6 +151,9 @@ message.already_logged_in : "You are already logged in!"
 eror.403.title : "Access Denied"
 error.403.message : "You do not have permission to access this page."
 error.403.homepage_link : "Go to Homepage"
+comment.edit.heading : "Edit Comment"
+
+
 
 
 
