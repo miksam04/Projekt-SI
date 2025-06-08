@@ -17,7 +17,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  */
 #[ORM\Entity(repositoryClass: TagRepository::class)]
 #[ORM\UniqueConstraint(name: 'tag_title_unique', columns: ['title'])]
-#[UniqueEntity(fields: ['title'])]
+#[UniqueEntity(fields: ['title'], message: 'tag.title.in_use')]
 #[ORM\Table(name: 'tags')]
 class Tag
 {
@@ -26,8 +26,9 @@ class Tag
     #[ORM\Column]
     private ?int $id = null;
 
-    #[Assert\Type('string')]
-    #[Assert\Length(min: 3, max: 64)]
+    #[Assert\NotBlank(message: 'tag.title.not_blank')]
+    #[Assert\Type('string', message: 'tag.title.type_error')]
+    #[Assert\Length(min: 3, max: 64, minMessage: 'tag.title.min_length', maxMessage: 'tag.title.max_length')]
     #[ORM\Column(length: 64)]
     private ?string $title = null;
 

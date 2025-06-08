@@ -20,8 +20,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: 'users')]
-#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
-#[UniqueEntity(fields: ['nickname'], message: 'This nickname is already in use')]
+#[UniqueEntity(fields: ['email'], message: 'email.in_use')]
+#[UniqueEntity(fields: ['nickname'], message: 'nickname.in_use')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -30,19 +30,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
-    #[Assert\NotBlank]
-    #[Assert\Email]
+    #[Assert\NotBlank(message: 'form.email.not_blank')]
+    #[Assert\Email(message: 'form.email.invalid')]
+    #[Assert\Length(max: 180, maxMessage: 'form.email.max_length')]
     private ?string $email = null;
 
     #[ORM\Column(type: 'json')]
     private array $roles = ['ROLE_USER'];
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'form.password.not_blank')]
+    #[Assert\Length(min: 6, max: 255, minMessage: 'form.password.min_length', maxMessage: 'form.password.max_length')]
     private ?string $password = null;
 
-    #[Assert\NotBlank]
-    #[Assert\Length(min: 2, max: 20)]
-    #[ORM\Column(length: 20, nullable: false, unique: true)]
+    #[Assert\NotBlank(message: 'form.nickname.not_blank')]
+    #[Assert\Length(min: 2, max: 20, minMessage: 'form.nickname.min_length', maxMessage: 'form.nickname.max_length')]
+    #[ORM\Column(nullable: false, unique: true)]
     private ?string $nickname = null;
 
     #[ORM\Column(type: 'boolean')]

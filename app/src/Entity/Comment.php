@@ -27,19 +27,19 @@ class Comment
     #[ORM\Column]
     private ?int $id = null;
 
-    #[Assert\NotBlank]
-    #[Assert\Length(min: 3, max: 255)]
-    #[Assert\Email]
+    #[Assert\NotBlank(message: 'form.email.not_blank')]
+    #[Assert\Length(min: 3, max: 255, minMessage: 'form.email.min_length', maxMessage: 'form.email.max_length')]
+    #[Assert\Email(message: 'form.email.invalid')]
     #[ORM\Column(length: 255)]
     private ?string $email = null;
 
-    #[Assert\NotBlank]
-    #[Assert\Length(min: 3, max: 64)]
+    #[Assert\NotBlank(message: 'form.nickname.not_blank')]
+    #[Assert\Length(min: 3, max: 64, minMessage: 'form.nickname.min_length', maxMessage: 'form.nickname.max_length')]
     #[ORM\Column(length: 64)]
     private ?string $nickname = null;
 
-    #[Assert\NotBlank]
-    #[Assert\Length(min: 2, max: 512)]
+    #[Assert\NotBlank(message: 'form.content.not_blank')]
+    #[Assert\Length(min: 2, max: 512, minMessage: 'form.content.min_length', maxMessage: 'form.content.max_length')]
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
 

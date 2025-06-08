@@ -20,7 +20,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
 #[ORM\Table(name: 'categories')]
 #[ORM\UniqueConstraint(name: 'category_name_unique', columns: ['name'])]
-#[UniqueEntity(fields: ['name'])]
+#[UniqueEntity(fields: ['name'], message: 'category.name.in_use')]
 class Category implements \Stringable
 {
     #[ORM\Id]
@@ -28,13 +28,13 @@ class Category implements \Stringable
     #[ORM\Column]
     private ?int $id = null;
 
-    #[Assert\Type('string')]
-    #[Assert\NotBlank]
-    #[Assert\Length(min: 3, max: 64)]
+    #[Assert\Type('string', message: 'category.name.type')]
+    #[Assert\NotBlank(message: 'category.name.not_blank')]
+    #[Assert\Length(min: 3, max: 64, minMessage: 'category.name.min_length', maxMessage: 'category.name.max_length')]
     #[ORM\Column(length: 64)]
     private ?string $name = null;
 
-    #[Assert\Type('string')]
+    #[Assert\Type('string', message: 'category.slug.type')]
     #[ORM\Column(length: 64)]
     #[Assert\Length(min: 3, max: 64)]
     #[Gedmo\Slug(fields: ['name'])]

@@ -28,35 +28,37 @@ class Post
     #[ORM\Column(type:'integer')]
     private ?int $id = null;
 
-    #[Assert\NotBlank]
-    #[Assert\Length(min: 3, max: 255)]
-    #[Assert\Type('string')]
+    #[Assert\NotBlank(message: 'post.title.not_blank')]
+    #[Assert\Length(min: 3, max: 255, minMessage: 'post.title.min_length', maxMessage: 'post.title.max_length')]
+    #[Assert\Type('string', message: 'post.title.type_error')]
     #[ORM\Column(type: 'string', length: 255)]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Assert\Length(min: 3, max: 65535)]
-    #[Assert\Type('string')]
+    #[Assert\NotBlank(message: 'post.content.not_blank')]
+    #[Assert\Length(min: 3, max: 65535, minMessage: 'post.content.min_length', maxMessage: 'post.content.max_length')]
+    #[Assert\Type('string', message: 'post.content.type_error')]
     private ?string $content = null;
 
     #[ORM\Column(type: 'datetime_immutable')]
     #[Gedmo\Timestampable(on: 'create')]
-    #[Assert\Type(\DateTimeImmutable::class)]
+    #[Assert\Type(\DateTimeImmutable::class, message: 'post.created_at.type_error')]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(type: 'datetime_immutable')]
     #[Gedmo\Timestampable(on: 'update')]
-    #[Assert\Type(\DateTimeImmutable::class)]
+    #[Assert\Type(\DateTimeImmutable::class, message: 'post.updated_at.type_error')]
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotNull(message: 'post.author.not_null')]
     private ?User $author = null;
 
     #[ORM\ManyToOne(targetEntity: Category::class, fetch: 'EXTRA_LAZY')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Assert\NotBlank]
-    #[Assert\Type(Category::class)]
+    #[Assert\NotNull(message: 'post.category.not_null')]
+    #[Assert\Type(Category::class, message: 'post.category.type_error')]
     private ?Category $category = null;
 
     #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'post', fetch: 'EXTRA_LAZY', orphanRemoval: true)]
@@ -72,6 +74,8 @@ class Post
     private Collection $tags;
 
     #[ORM\Column(type: 'string', length: 20, options: ['default' => 'draft'])]
+    #[Assert\NotBlank(message: 'post.status.not_blank')]
+    #[Assert\Choice(choices: ['draft', 'published'], message: 'post.status.invalid_choice')]
     private string $status = 'draft';
 
     #[ORM\OneToMany(targetEntity: Image::class, mappedBy: 'post', cascade: ['persist', 'remove'], fetch: 'EXTRA_LAZY', orphanRemoval: true)]

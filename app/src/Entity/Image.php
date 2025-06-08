@@ -19,7 +19,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: ImageRepository::class)]
 #[ORM\Table(name: 'images')]
 #[ORM\UniqueConstraint(name: 'uq_images_file_name', columns: ['file_name'])]
-#[UniqueEntity(fields: ['file_name'])]
+#[UniqueEntity(fields: ['file_name'], message: 'image.file_name.in_use')]
 class Image
 {
     #[ORM\Id]
@@ -29,7 +29,7 @@ class Image
 
     #[ORM\ManyToOne(targetEntity: Post::class, inversedBy: 'images', cascade:['persist', 'remove'], fetch: 'EXTRA_LAZY')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Assert\Type(User::class)]
+    #[Assert\NotNull(message: 'image.post.not_null')]
     private ?Post $post = null;
 
     #[ORM\Column(length: 191)]

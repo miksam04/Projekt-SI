@@ -22,6 +22,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 #[IsGranted('ROLE_ADMIN')]
 class AdminController extends AbstractController
 {
+    public $translator;
+
     /**
      * Lists all users.
      *
@@ -43,9 +45,10 @@ class AdminController extends AbstractController
     /**
      * Edits a user.
      *
-     * @param User        $user        User entity to edit
-     * @param Request     $request     HTTP request object
-     * @param UserService $userService Service to manage user data
+     * @param User                $user        User entity to edit
+     * @param Request             $request     HTTP request object
+     * @param UserService         $userService Service to manage user data
+     * @param TranslatorInterface $translator  Translator service for translations
      *
      * @return Response Rendered response
      */

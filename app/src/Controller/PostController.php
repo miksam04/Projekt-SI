@@ -67,7 +67,7 @@ class PostController extends AbstractController
     public function index(#[MapQueryString(resolver: PostListInputFiltersDtoResolver::class)] PostListInputFiltersDto $filters, #[MapQueryParameter] int $page = 1): Response
     {
         $user = $this->getUser();
-        
+
         $pagination = $this->postService->getPaginatedPosts($page, $user, $filters);
 
         return $this->render('home/index.html.twig', [
