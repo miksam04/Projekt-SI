@@ -43,6 +43,8 @@ security:
       roles: PUBLIC_ACCESS
     - path: ^/[a-z]{2}/register
       roles: PUBLIC_ACCESS
+    - path: ^/[a-z]{2}/post/\d+
+      roles: PUBLIC_ACCESS
     - path: ^/[a-z]{2}/$
       roles: PUBLIC_ACCESS
     - path: ^/[a-z]{2}/

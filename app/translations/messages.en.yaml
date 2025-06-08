@@ -147,6 +147,10 @@ tag.title.not_blank : "Tag title cannot be blank"
 tag.title.type_error : "Tag title must be a string"
 tag.title.min_length : "Tag title must be at least 3 characters long"
 tag.title.max_length : "Tag title cannot exceed 64 characters"
+message.already_logged_in : "You are already logged in!"
+eror.403.title : "Access Denied"
+error.403.message : "You do not have permission to access this page."
+error.403.homepage_link : "Go to Homepage"
 
 
 
