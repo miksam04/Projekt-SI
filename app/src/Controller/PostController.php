@@ -12,10 +12,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use App\Interface\PostServiceInterface;
 use App\Interface\CategoryServiceInterface;
+use App\Interface\ImageServiceInterface;
 use App\Service\CommentService;
 use App\Service\TagService;
 use App\Entity\Post;
 use App\Entity\Comment;
+use App\Entity\Image;
 use App\Form\Type\CommentType;
 use App\Form\Type\PostType;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -26,6 +28,7 @@ use App\Dto\PostListInputFiltersDto;
  */
 class PostController extends AbstractController
 {
+    public $imageService;
     public $tagService;
     public $commentService;
     public $postService;
@@ -40,14 +43,16 @@ class PostController extends AbstractController
      * @param TranslatorInterface      $translator      the translator service
      * @param CommentService           $commentService  the comment service
      * @param TagService               $tagService      the tag service
+     * @param ImageServiceInterface    $imageService    the image service
      */
-    public function __construct(PostServiceInterface $postService, CategoryServiceInterface $categoryService, TranslatorInterface $translator, CommentService $commentService, TagService $tagService)
+    public function __construct(PostServiceInterface $postService, CategoryServiceInterface $categoryService, TranslatorInterface $translator, CommentService $commentService, TagService $tagService, ImageServiceInterface $imageService)
     {
         $this->postService = $postService;
         $this->categoryService = $categoryService;
         $this->commentService = $commentService;
         $this->tagService = $tagService;
         $this->translator = $translator;
+        $this->imageService = $imageService;
     }
 
     /**
@@ -113,6 +118,10 @@ class PostController extends AbstractController
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $files = $form->get('images')->getData();
+            foreach ($files as $file) {
+                $this->imageService->create($file, $post);
+            }
             $this->postService->savePost($post);
 
             $this->addFlash(
@@ -157,6 +166,20 @@ class PostController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $imagesToDelete = $request->request->all('delete_images');
+            if ($imagesToDelete) {
+                foreach ($post->getImages() as $image) {
+                    if (in_array($image->getId(), $imagesToDelete)) {
+                        $this->imageService->removeFile($image);
+                        $post->removeImage($image);
+                    }
+                }
+            }
+
+            $files = $form->get('images')->getData();
+            foreach ($files as $file) {
+                $this->imageService->create($file, $post);
+            }
             $this->postService->savePost($post);
 
             $this->addFlash(
@@ -204,6 +227,9 @@ class PostController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            foreach ($post->getImages() as $image) {
+                $this->imageService->removeFile($image);
+            }
             $this->postService->deletePost($post);
 
             $this->addFlash(

@@ -49,7 +49,7 @@
                     <h2 class="post-title">{{ post.title }}</h2>
                     {% if is_granted('ROLE_ADMIN')%}
                         <span class="badge {{ post.status == 'published' ? 'bg-success' : 'bg-secondary' }}">
-                            {{ post.status == 'published' ? 'Opublikowany' : 'Szkic' }}
+                            {{ post.status == 'published' ? 'Published' : 'Draft' }}
                         </span>
                     {% endif %}
                     <h3 class="post-subtitle">{{ post.content|slice(0, 150)}}</h3>

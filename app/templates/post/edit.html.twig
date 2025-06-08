@@ -23,6 +23,15 @@
                     {{ form_widget(form.content, {'attr': {'class': 'form-control', 'rows': 10}}) }}
                     {{ form_errors(form.content) }}
                 </div>
+                <div>
+                {% for image in post.images %}
+                    <img src="{{ asset('uploads/images/' ~ image.fileName) }}" style="max-width:100px;">
+                    <label>
+                        <input type="checkbox" name="delete_images[]" value="{{ image.id }}">
+                        Usuń ten obrazek
+                    </label>
+                </div>
+                {% endfor %}
                 <div class="d-flex justify-content-end gap-2">
                     <button type="submit" class="btn btn-primary">Zapisz zmiany</button>
                     <a href="{{ cancel_url }}" class="btn btn-secondary">Powrót</a>

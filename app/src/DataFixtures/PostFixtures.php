@@ -53,6 +53,7 @@ class PostFixtures extends AbstractBaseFixtures implements DependentFixtureInter
             $post->setContent($this->faker->paragraphs(3, true));
             $post->setAuthor($this->getRandomReference('user', User::class));
             $post->setCategory($this->getRandomReference('category', Category::class));
+            $post->setStatus('published');
 
             $tagCount = $this->faker->numberBetween(1, 4);
             $tagTitles = [];

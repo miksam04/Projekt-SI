@@ -15,7 +15,10 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use App\Form\DataTransformer\TagsDataTransformer;
+use Symfony\Component\Validator\Constraints\Image as ImageConstraint;
+use Symfony\Component\Validator\Constraints\All;
 
 /**
  * Class PostType.
@@ -106,6 +109,31 @@ class PostType extends AbstractType
                     'required' => true,
                     'expanded' => true,
                     'multiple' => false,
+                ]
+            )
+            ->add(
+                'images',
+                FileType::class,
+                [
+                    'mapped' => false,
+                    'label' => 'Files',
+                    'required' => false,
+                    'multiple' => true,
+                    'constraints' => [
+                        new All([
+                            'constraints' => [
+                                new ImageConstraint([
+                                    'maxSize' => '2M',
+                                    'mimeTypes' => [
+                                        'image/png',
+                                        'image/jpeg',
+                                        'image/pjpeg',
+                                        'image/webp',
+                                    ],
+                                ]),
+                            ],
+                        ]),
+                    ],
                 ]
             );
 

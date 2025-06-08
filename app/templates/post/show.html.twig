@@ -25,6 +25,14 @@
                     <h1>{{ post.title }}</h1>
                 </div>
                 <div class="card-body">
+                    {# Wyświetlanie obrazków powiązanych z postem #}
+                    {% if post.images is defined and post.images|length > 0 %}
+                        <div class="mb-3">
+                            {% for image in post.images %}
+                                <img src="{{ asset('uploads/images/' ~ image.fileName) }}" alt="Obrazek posta" class="img-fluid mb-2" style="max-width: 400px;">
+                            {% endfor %}
+                        </div>
+                    {% endif %}
                     <p class="card-text">
                         <small class="text-muted">
                             Opublikowano: {{ post.createdAt|date('Y-m-d H:i') }} przez {{ post.author.email ?? 'Anonim' }}

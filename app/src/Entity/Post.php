@@ -74,6 +74,9 @@ class Post
     #[ORM\Column(type: 'string', length: 20, options: ['default' => 'draft'])]
     private string $status = 'draft';
 
+    #[ORM\OneToMany(targetEntity: Image::class, mappedBy: 'post', cascade: ['persist', 'remove'], fetch: 'EXTRA_LAZY', orphanRemoval: true)]
+    private Collection $images;
+
     /**
      * Post constructor.
      *
@@ -83,6 +86,7 @@ class Post
     {
         $this->comments = new ArrayCollection();
         $this->tags = new ArrayCollection();
+        $this->images = new ArrayCollection();
     }
 
     /**
@@ -307,6 +311,35 @@ class Post
     public function setStatus(string $status): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Gets the images associated with the post.
+     *
+     * @return Collection the collection of images
+     */
+    public function getImages(): Collection
+    {
+        return $this->images;
+    }
+
+    /**
+     * Removes an image from the post.
+     *
+     * @param Image $image the image to remove
+     *
+     * @return self the current instance for method chaining
+     */
+    public function removeImage(Image $image): self
+    {
+        if ($this->images->contains($image)) {
+            $this->images->removeElement($image);
+            if ($image->getPost() === $this) {
+                $image->setPost(null);
+            }
+        }
 
         return $this;
     }
