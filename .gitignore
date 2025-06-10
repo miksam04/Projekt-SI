@@ -4,4 +4,5 @@ vendor
 .php_cs.cache
 .phpunit.result.cache
 .env
+.vscode
 check_code.result.cache
