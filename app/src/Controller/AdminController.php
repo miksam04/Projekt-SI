@@ -69,6 +69,7 @@ class AdminController extends AbstractController
 
             if ($user === $this->getUser() && $form->get('isBlocked')->getData()) {
                 $this->addFlash('warning', $translator->trans('admin.cannot_block_self'));
+
                 return $this->redirectToRoute('user_index');
             }
 

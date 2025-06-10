@@ -19,9 +19,15 @@ use App\Entity\User;
  */
 class UserChecker implements UserCheckerInterface
 {
-    public function __construct(private TranslatorInterface $translator)
+    /**
+     * Constructor.
+     *
+     * @param TranslatorInterface $translator the translator service for translations
+     */
+    public function __construct(private readonly TranslatorInterface $translator)
     {
     }
+
     /**
      * Check pre-authentication user status.
      *
