@@ -113,7 +113,8 @@ error.403.homepage_link : "Go to Homepage"
 comment.edit.heading : "Edit Comment"
 account_blocked_message : "Your account is blocked. Please contact the administrator for assistance."
 admin.cannot_block_self : "You cannot block your own account!"
-
+error404.message : "The page you are looking for does not exist."
+error.404.homepage_link : "Go to Homepage"
 
 
 
