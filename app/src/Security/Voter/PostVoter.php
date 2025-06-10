@@ -54,9 +54,7 @@ final class PostVoter extends Voter
         if (!$user instanceof UserInterface) {
             return false;
         }
-        if (!$subject instanceof Post) {
-            return false;
-        }
+
 
         return match ($attribute) {
             self::EDIT => $this->canEdit($subject, $user),

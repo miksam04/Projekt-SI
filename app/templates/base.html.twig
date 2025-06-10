@@ -50,6 +50,7 @@
         <input class="form-control form-control-sm me-2" type="search" name="search" placeholder="{{ 'site.search_placeholder'|trans }}" value="{{ app.request.get('phrase') }}">
         <button class="btn btn-outline-primary btn-sm" type="submit">{{ 'site.search'|trans }}</button>
       </form>
+    {% if app.request.attributes.get('_route') %}
       <div class="dropdown ms-3">
         <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" id="langDropdown" data-bs-toggle="dropdown" aria-expanded="false">
           {{ app.request.locale == 'pl' ? '🇵🇱 Polski' : '🇬🇧 English' }}
@@ -68,6 +69,7 @@
           </li>
         </ul>
       </div>
+      {% endif %}
     </div>
   </div>
 </nav>
