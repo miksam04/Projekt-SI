@@ -9,6 +9,7 @@ namespace App\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAccountStatusException;
 use Symfony\Component\Security\Core\User\UserCheckerInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use App\Entity\User;
 
 /**
@@ -18,6 +19,9 @@ use App\Entity\User;
  */
 class UserChecker implements UserCheckerInterface
 {
+    public function __construct(private TranslatorInterface $translator)
+    {
+    }
     /**
      * Check pre-authentication user status.
      *
@@ -30,7 +34,7 @@ class UserChecker implements UserCheckerInterface
     public function checkPreAuth(UserInterface $user): void
     {
         if ($user instanceof User && $user->isBlocked()) {
-            throw new CustomUserMessageAccountStatusException('Your account is blocked.');
+            throw new CustomUserMessageAccountStatusException($this->translator->trans('account_blocked_message'));
         }
     }
 

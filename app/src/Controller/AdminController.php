@@ -22,8 +22,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 #[IsGranted('ROLE_ADMIN')]
 class AdminController extends AbstractController
 {
-    public $translator;
-
     /**
      * Lists all users.
      *
@@ -69,10 +67,15 @@ class AdminController extends AbstractController
                 return $this->redirectToRoute('user_index');
             }
 
+            if ($user === $this->getUser() && $form->get('isBlocked')->getData()) {
+                $this->addFlash('warning', $translator->trans('admin.cannot_block_self'));
+                return $this->redirectToRoute('user_index');
+            }
+
             $plainPassword = $form->get('plainPassword')->getData();
             $userService->updatePassword($user, $plainPassword);
             $userService->saveUser($user);
-            $this->addFlash('success', $translator->trans('message.%entity%.updated_successfully', ['%entity%' => $this->translator->trans('entity.user')]));
+            $this->addFlash('success', $translator->trans('message.%entity%.updated_successfully', ['%entity%' => $translator->trans('entity.user')]));
 
             return $this->redirectToRoute('user_index');
         }

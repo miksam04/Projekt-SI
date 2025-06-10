@@ -111,6 +111,8 @@ error.403.title : "Access Denied"
 error.403.message : "You do not have permission to access this page."
 error.403.homepage_link : "Go to Homepage"
 comment.edit.heading : "Edit Comment"
+account_blocked_message : "Your account is blocked. Please contact the administrator for assistance."
+admin.cannot_block_self : "You cannot block your own account!"
 
 
 
