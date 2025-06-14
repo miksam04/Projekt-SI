@@ -23,7 +23,7 @@ enum UserRole: string
     {
         return match ($this) {
             UserRole::ROLE_ADMIN => 'role_admin',
-            Userrole::ROLE_USER => 'role_user',
+            UserRole::ROLE_USER => 'role_user',
         };
     }
 }

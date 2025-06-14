@@ -53,21 +53,19 @@ class AdminController extends AbstractController
     #[\Symfony\Component\Routing\Attribute\Route('/admin/users/{id}/edit', name: 'admin_user_edit')]
     public function edit(User $user, Request $request, UserService $userService, TranslatorInterface $translator): Response
     {
-        $adminCountBefore = $userService->countAdmins();
-        $rolesBefore = $user->getRoles();
         $form = $this->createForm(AdminType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $rolesAfter = $form->get('roles')->getData();
+            $user->setRoles(array_values($form->get('roles')->getData()));
 
-            if (in_array('ROLE_ADMIN', $rolesBefore, true) && !in_array('ROLE_ADMIN', $rolesAfter, true) && $adminCountBefore <= 1) {
+            if (!$userService->canAdminBeRemoved($user)) {
                 $this->addFlash('warning', $translator->trans('admin.last_admin_cannot_remove'));
 
                 return $this->redirectToRoute('user_index');
             }
 
-            if ($user === $this->getUser() && $form->get('isBlocked')->getData()) {
+            if (!$userService->canBeBlocked($user)) {
                 $this->addFlash('warning', $translator->trans('admin.cannot_block_self'));
 
                 return $this->redirectToRoute('user_index');

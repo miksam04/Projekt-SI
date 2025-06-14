@@ -12,6 +12,7 @@ use App\Entity\User;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Knp\Component\Pager\Pagination\PaginationInterface;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * Class UserService.
@@ -20,6 +21,7 @@ use Knp\Component\Pager\Pagination\PaginationInterface;
  */
 class UserService implements UserServiceInterface
 {
+    public $security;
     public $paginator;
     public $userRepository;
     public $userPasswordHasher;
@@ -31,12 +33,14 @@ class UserService implements UserServiceInterface
      * @param UserRepository              $userRepository     User repository
      * @param UserPasswordHasherInterface $userPasswordHasher Password hasher
      * @param PaginatorInterface          $paginator          Paginator service
+     * @param Security                    $security           Security service
      */
-    public function __construct(UserRepository $userRepository, UserPasswordHasherInterface $userPasswordHasher, PaginatorInterface $paginator)
+    public function __construct(UserRepository $userRepository, UserPasswordHasherInterface $userPasswordHasher, PaginatorInterface $paginator, Security $security)
     {
         $this->userRepository = $userRepository;
         $this->userPasswordHasher = $userPasswordHasher;
         $this->paginator = $paginator;
+        $this->security = $security;
     }
 
     /**
@@ -95,12 +99,38 @@ class UserService implements UserServiceInterface
     }
 
     /**
-     * Count total number of admins.
+     * Check if an admin can be removed.
      *
-     * @return int Total number of users
+     * @param User $user User object to check
+     *
+     * @return bool True if the admin can be removed, false otherwise
      */
-    public function countAdmins(): int
+    public function canAdminBeRemoved(User $user): bool
     {
-        return $this->userRepository->countAdmins();
+        $admins = $this->userRepository->findByRole('ROLE_ADMIN');
+
+        $wasAdmin = false;
+        foreach ($admins as $admin) {
+            if ($admin->getId() === $user->getId()) {
+                $wasAdmin = true;
+                break;
+            }
+        }
+
+        return !($wasAdmin && !in_array('ROLE_ADMIN', $user->getRoles(), true) && 1 === count($admins));
+    }
+
+    /**
+     * Check if a user can be blocked.
+     *
+     * @param User $user User object to check
+     *
+     * @return bool True if the user can be blocked, false otherwise
+     */
+    public function canBeBlocked(User $user): bool
+    {
+        $currentUser = $this->security->getUser();
+
+        return !($currentUser && $user->getId() === $currentUser->getId() && $user->isBlocked());
     }
 }

@@ -47,9 +47,20 @@ interface UserServiceInterface
     public function updatePassword(User $user, ?string $plainPassword): void;
 
     /**
-     * Count total number of admins.
+     * Check if a permission can be removed.
      *
-     * @return int Total number of admins
+     * @param User $user User object
+     *
+     * @return bool True if the permission can be removed, false otherwise
      */
-    public function countAdmins(): int;
+    public function canAdminBeRemoved(User $user): bool;
+
+    /**
+     * Check if a user can be blocked.
+     *
+     * @param User $user User object
+     *
+     * @return bool True if the user can be blocked, false otherwise
+     */
+    public function canBeBlocked(User $user): bool;
 }

@@ -59,16 +59,31 @@ class UserRepository extends ServiceEntityRepository
     public function countAdmins(): int
     {
         $users = $this->findAll();
-        $adminCount = 0;
+        $count = 0;
         foreach ($users as $user) {
             if (in_array('ROLE_ADMIN', $user->getRoles(), true)) {
-                ++$adminCount;
+                ++$count;
             }
         }
 
-        return $adminCount;
+        return $count;
     }
 
+    /**
+     * Find users by role.
+     *
+     * @param string $role The role to search for
+     *
+     * @return User[] Returns an array of User objects
+     */
+    public function findByRole(string $role): array
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.roles LIKE :role')
+            ->setParameter('role', '%"'.$role.'"%')
+            ->getQuery()
+            ->getResult();
+    }
 
 
 
